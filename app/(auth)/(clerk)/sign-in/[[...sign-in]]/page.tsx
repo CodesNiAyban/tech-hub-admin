@@ -96,9 +96,9 @@ export default function SignInPage() {
                       </Button>
                     </SignIn.Action>
 
-                    <Button variant="link" size="sm" asChild>
+                    {/* <Button variant="link" size="sm" asChild>
                       <Link href="/sign-up">Don&apos;t have an account? Sign up</Link>
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardFooter>
               </Card>
