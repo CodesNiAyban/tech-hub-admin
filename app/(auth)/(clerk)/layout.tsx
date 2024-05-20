@@ -1,8 +1,6 @@
 import { siteConfig } from "@/config/site";
-import { checkRole } from "@/lib/role";
 import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
-import { redirect } from "next/navigation";
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {

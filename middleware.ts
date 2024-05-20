@@ -6,6 +6,7 @@ const isProtectedRoute = createRouteMatcher([
   '/teacher(.*)',
   '/admin(.*)',
   '/course(.*)',
+  '/',
 ]);
 
 export default clerkMiddleware((auth, req) => {
@@ -17,7 +18,4 @@ export default clerkMiddleware((auth, req) => {
   }
 });
 
-export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
-  publicRoutes: ['/sign-in(.*)']
-};
+export const config = { matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'] };

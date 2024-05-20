@@ -1,18 +1,14 @@
 
 import { redirect } from "next/navigation";
 
-import { auth } from "@clerk/nextjs/server";
+import { getProgress } from "@/app/actions/get-progress";
+import NoAccessAdmin from "@/components/no-access-admin";
 import db from "@/lib/db";
+import { checkRole } from "@/lib/role";
+import { auth } from "@clerk/nextjs/server";
+import { ThemeProvider } from "next-themes";
 import { CourseNavbar } from "./_components/(navbar)/navbar";
 import { CourseSidebar } from "./_components/(sidebar)/course-sidebar";
-import { ThemeProvider } from "next-themes";
-import { checkRole } from "@/lib/role";
-import { getProgress } from "@/app/actions/get-progress";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import NoAccessAdmin from "@/components/no-access-admin";
 
 
 const CourseLayout = async ({

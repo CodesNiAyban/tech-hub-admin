@@ -19,9 +19,10 @@ const Browse = async ({
 }: BrowseProps) => {
     const { userId } = auth();
 
-    // if (!userId) {
-    //     return redirect("/sign-in")
-    // }
+    if (!userId) {
+        return redirect("/sign-in")
+    }
+
     const categories = await db.category.findMany({
         orderBy: {
             name: "asc"

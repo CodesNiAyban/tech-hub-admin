@@ -8,13 +8,11 @@ import {
     Loader2,
     Menu
 } from "lucide-react"
+import Link from "next/link"
 import { MobileSubscriptionCard } from "../(sidebar)/mobile-subscription-card"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
 import { TeacherStudentButton } from "./teacher-student-button"
-import Link from "next/link"
-import { checkRole } from "@/lib/role"
-import toast from "react-hot-toast"
 
 export const DashboardNavBar = () => {
     return (

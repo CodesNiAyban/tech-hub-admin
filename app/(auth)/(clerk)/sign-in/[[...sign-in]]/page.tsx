@@ -1,25 +1,18 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Icons } from '@/components/ui/icons';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
 import * as Clerk from '@clerk/elements/common';
 import * as SignIn from '@clerk/elements/sign-in';
-import { useAuth } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Icons } from '@/components/ui/icons';
+import { cn } from '@/lib/utils';
+import { Logo } from '@/components/logo';
 
 export default function SignInPage() {
-  const { isSignedIn } = useAuth();
-
-  if (isSignedIn) {
-    redirect('/');
-  }
-
   return (
-    <SignIn.Root path="/sign-in">
+    <SignIn.Root>
       <Clerk.Loading>
         {(isGlobalLoading) => (
           <>
@@ -85,7 +78,7 @@ export default function SignInPage() {
                     <Clerk.Label asChild>
                       <Label>Email address</Label>
                     </Clerk.Label>
-                    <Clerk.Input type="email" required asChild>
+                    <Clerk.Input type="email" required asChild id="identifier">
                       <Input />
                     </Clerk.Input>
                     <Clerk.FieldError className="block text-sm text-destructive" />
@@ -102,6 +95,10 @@ export default function SignInPage() {
                         </Clerk.Loading>
                       </Button>
                     </SignIn.Action>
+
+                    <Button variant="link" size="sm" asChild>
+                      <Link href="/sign-up">Don&apos;t have an account? Sign up</Link>
+                    </Button>
                   </div>
                 </CardFooter>
               </Card>
