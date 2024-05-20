@@ -1,11 +1,9 @@
 import { getAnalytics } from "@/app/actions/get-analytics";
-import { setRole } from "@/actions/get-users";
 import { checkRole } from "@/lib/role";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Chart } from "./_components/chart";
 import { DataCard } from "./_components/data-card";
-import { SearchUsers } from "../../admin/_components/search-user";
 
 // Define the type for params
 type AnalyticsPageParams = {

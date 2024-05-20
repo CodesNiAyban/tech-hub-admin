@@ -1,5 +1,4 @@
 "use client"
-
 import { teacherRoutes } from "../../(routes)/teacher/courses/_components/_utils/admin-routes";
 import SideBarItem from "./sidebar-item";
 
