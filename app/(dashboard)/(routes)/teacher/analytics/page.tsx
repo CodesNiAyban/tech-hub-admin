@@ -1,4 +1,4 @@
-import { getAnalytics } from "@/actions/get-analytics";
+import { getAnalytics } from "@/app/actions/get-analytics";
 import { setRole } from "@/actions/get-users";
 import { checkRole } from "@/lib/role";
 import { auth, clerkClient } from "@clerk/nextjs/server";

@@ -1,4 +1,4 @@
-import { getCourses } from "@/actions/get-courses";
+import { getCourses } from "@/app/actions/get-courses";
 import { CoursesList } from "@/components/courses-list";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";

@@ -95,10 +95,6 @@ export default function SignInPage() {
                         </Clerk.Loading>
                       </Button>
                     </SignIn.Action>
-
-                    <Button variant="link" size="sm" asChild>
-                      <Link href="/sign-up">Don&apos;t have an account? Sign up</Link>
-                    </Button>
                   </div>
                 </CardFooter>
               </Card>

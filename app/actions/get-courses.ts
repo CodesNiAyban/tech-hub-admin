@@ -1,6 +1,6 @@
 import { Category, Course } from "@prisma/client";
 
-import { getProgress } from "@/actions/get-progress";
+import { getProgress } from "@/app/actions/get-progress";
 import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
 

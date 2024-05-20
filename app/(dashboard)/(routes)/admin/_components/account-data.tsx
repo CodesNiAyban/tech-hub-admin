@@ -1,6 +1,6 @@
 // AccountDataTable.tsx
 "use client";
-import { setRole } from '@/actions/set-role';
+import { setRole } from '@/app/actions/set-role';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User } from '@clerk/nextjs/server';

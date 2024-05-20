@@ -1,20 +1,13 @@
 "use client"
 
-import { usePathname } from "next/navigation";
-import { teacherRoutes } from "../../(routes)/teacher/courses/_components/_utils/teacherRoutes";
-import { guestRoutes } from "../../(routes)/teacher/courses/_components/_utils/guestRoutes";
+import { teacherRoutes } from "../../(routes)/teacher/courses/_components/_utils/admin-routes";
 import SideBarItem from "./sidebar-item";
 
 export const SidebarRoutes = () => {
-    const pathname = usePathname();
-
-    const isTeacherPage = pathname?.includes("/teacher")
-    
-    const routes = isTeacherPage ? teacherRoutes : guestRoutes;
 
     return (
         <nav className="grid items-start text-sm font-medium lg:px-4">
-            {routes.map((route) => (
+            {teacherRoutes.map((route) => (
                 <SideBarItem
                     key={route.href}
                     icon={route.icon}
@@ -25,5 +18,5 @@ export const SidebarRoutes = () => {
         </nav>
     );
 }
-export { guestRoutes, teacherRoutes};
+export { teacherRoutes };
 

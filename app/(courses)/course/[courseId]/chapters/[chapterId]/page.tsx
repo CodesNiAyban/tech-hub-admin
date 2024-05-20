@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import { File } from "lucide-react";
 
-import { getChapter } from "@/actions/get-chapter";
+import { getChapter } from "@/app/actions/get-chapter";
 
 import { Preview } from "@/components/preview";
 

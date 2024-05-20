@@ -2,7 +2,7 @@ import { CheckCircle, Clock } from "lucide-react";
 import { redirect } from "next/navigation";
 import InfoCard from "./_components/info-card";
 import { auth } from "@clerk/nextjs/server";
-import { getDashboardCourses } from "@/actions/get-dashboard-courses";
+import { getDashboardCourses } from "@/app/actions/get-dashboard-courses";
 import { CoursesList } from "@/components/courses-list";
 
 export default async function Dashboard() {
