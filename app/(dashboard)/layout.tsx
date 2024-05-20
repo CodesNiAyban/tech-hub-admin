@@ -10,7 +10,9 @@ import DashboardNavBar from "./_components/(navbar)/navbar";
 import { SideBar } from "./_components/(sidebar)/sidebar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { TriangleAlert } from "lucide-react";
+import { Loader2, TriangleAlert } from "lucide-react";
+import { ClerkLoading, SignOutButton } from "@clerk/nextjs";
+import NoAccessAdmin from "@/components/no-access-admin";
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {
@@ -23,24 +25,7 @@ const MarketingLayout = ({
     children: React.ReactNode;
 }) => {
     if (!checkRole("admin")) {
-        return (
-            <div className="flex items-center justify-center h-screen p-10">
-                <Card className="w-full sm:w-96">
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-center">
-                            <TriangleAlert className="h-6 w-6 mr-1 text-primary" />
-                            Access Denied
-                        </CardTitle>
-                        <CardDescription className="flex items-center justify-center">
-                            You must be an admin to access this page
-                        </CardDescription>
-                        <Button asChild variant="outline">
-                            <Link href="/sign-in">Sign in again</Link>
-                        </Button>
-                    </CardHeader>
-                </Card>
-            </div>
-        );
+        return <NoAccessAdmin />
     } else {
         return (
             <ThemeProvider

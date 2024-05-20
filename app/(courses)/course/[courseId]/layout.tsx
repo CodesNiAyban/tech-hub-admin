@@ -12,6 +12,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import NoAccessAdmin from "@/components/no-access-admin";
 
 
 const CourseLayout = async ({
@@ -27,26 +28,8 @@ const CourseLayout = async ({
         return redirect("/");
     }
 
-    if (!checkRole("admin")) {
-        return (
-            <div className="flex items-center justify-center h-screen p-10">
-                <Card className="w-full sm:w-96">
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-center">
-                            <TriangleAlert className="h-6 w-6 mr-1 text-primary" />
-                            Access Denied
-                        </CardTitle>
-                        <CardDescription className="flex items-center justify-center">
-                            You must be an admin to access this page
-                        </CardDescription>
-                        <Button asChild variant="outline">
-                            <Link href="/sign-in">Sign in again</Link>
-                        </Button>
-                    </CardHeader>
-                </Card>
-            </div>
-        );
-    }
+    if (!checkRole("admin")) return <NoAccessAdmin />
+    
 
     const course = await db.course.findUnique({
         where: {
