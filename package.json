@@ -31,6 +31,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-table": "^8.17.0",
     "@uidotdev/usehooks": "^2.4.1",
+    "@uploadthing/mime-types": "^0.2.10",
     "@uploadthing/react": "^6.5.3",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",

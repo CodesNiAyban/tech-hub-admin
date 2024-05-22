@@ -1,12 +1,12 @@
 "use client"
-import { teacherRoutes } from "../../(routes)/teacher/courses/_components/_utils/admin-routes";
+import { adminRoutes } from "../../(routes)/admin/_components/_utils/adminRoutes";
 import SideBarItem from "./sidebar-item";
 
 export const SidebarRoutes = () => {
 
     return (
         <nav className="grid items-start text-sm font-medium lg:px-4">
-            {teacherRoutes.map((route) => (
+            {adminRoutes.map((route) => (
                 <SideBarItem
                     key={route.href}
                     icon={route.icon}
@@ -17,5 +17,5 @@ export const SidebarRoutes = () => {
         </nav>
     );
 }
-export { teacherRoutes };
+export { adminRoutes };
 

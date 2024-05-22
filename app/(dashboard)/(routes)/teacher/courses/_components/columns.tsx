@@ -1,17 +1,23 @@
-"use client"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { formatPrice } from "@/lib/format"
-import { cn } from "@/lib/utils"
-import { Course } from "@prisma/client"
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react"
-import Link from "next/link"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { formatPrice } from "@/lib/format";
+import { Course } from "@prisma/client";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
+import Link from "next/link";
+import { CourseTableActions } from "./course-table-actions";
+import UserCell from "./user-cell";
 
+// Define the extended course type
+interface ExtendedCourse extends Course {
+    categories: { name: string }[];
+    chapters: { isPublished: boolean; position: number }[];
+}
 
-export const columns: ColumnDef<Course>[] = [
+export const columns: ColumnDef<ExtendedCourse>[] = [
     {
         accessorKey: "title",
         header: ({ column }) => {
@@ -23,7 +29,7 @@ export const columns: ColumnDef<Course>[] = [
                     Title
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
     },
     {
@@ -37,14 +43,15 @@ export const columns: ColumnDef<Course>[] = [
                     Price
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const price = parseFloat(row.getValue("price") || "0");
             return (
-            <div>
-                {formatPrice(price)}
-            </div>)
+                <div>
+                    {formatPrice(price)}
+                </div>
+            );
         }
     },
     {
@@ -58,22 +65,48 @@ export const columns: ColumnDef<Course>[] = [
                     Published
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
-            )
+            );
         },
         cell: ({ row }) => {
             const isPublished = row.getValue("isPublished") || false;
-
             return (
-                <Badge variant={isPublished ? "success":"yellow"}>
+                <Badge variant={isPublished ? "success" : "yellow"}>
                     {isPublished ? "Published" : "Draft"}
                 </Badge>
-            )
+            );
         }
+    },
+    {
+        accessorKey: "userId",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Created By
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+        cell: ({ row }) => <UserCell userId={row.original.userId} /> // Use the UserCell component
     },
     {
         id: "actions",
         cell: ({ row }) => {
             const { id } = row.original;
+            const course = row.original;
+
+            const requiredFields = [
+                course.title,
+                course.description,
+                course.imageUrl,
+                course.price,
+                course.categories.length > 0,
+                course.chapters.some(chapter => chapter.isPublished),
+            ];
+
+            const isComplete = requiredFields.every(Boolean);
 
             return (
                 <DropdownMenu>
@@ -84,15 +117,22 @@ export const columns: ColumnDef<Course>[] = [
                         </DropdownMenuTrigger>
                     </Button>
                     <DropdownMenuContent align="end">
-                        <Link href={`/teacher/courses/${id}`}>
-                            <DropdownMenuItem>
-                                <Pencil className="h-4 w-4 mr-2" />
-                                Edit
-                            </DropdownMenuItem>
-                        </Link>
+                        <div className="flex flex-col">
+                            <Link href={`/teacher/courses/${id}`}>
+                                <DropdownMenuItem>
+                                    <Pencil className="h-4 w-4 mr-2 ml-1" />
+                                    Edit
+                                </DropdownMenuItem>
+                            </Link>
+                            <CourseTableActions
+                                isComplete={isComplete}
+                                courseId={id}
+                                isPublished={course.isPublished}
+                            />
+                        </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            )
+            );
         }
     }
-]
+];

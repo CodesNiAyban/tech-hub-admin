@@ -19,9 +19,6 @@ export const getDashboardCourses = async (
 ): Promise<DashboardCourses> => {
   try {
     const purchasedCourses = await db.purchase.findMany({
-      where: {
-        userId: userId,
-      },
       select: {
         course: {
           include: {

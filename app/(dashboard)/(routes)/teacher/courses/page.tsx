@@ -10,29 +10,41 @@ const Courses = async () => {
     const { userId } = auth();
 
     if (!userId) {
-        return redirect("/")
+        return redirect("/");
     }
 
     const courses = await db.course.findMany({
-        where: {
-            userId,
-        },
         orderBy: {
             createdAt: "desc",
+        },
+        include: {
+            chapters: {
+                orderBy: {
+                    position: "asc",
+                },
+            },
+            categories: {
+                orderBy: {
+                    name: "desc",
+                },
+            },
+            attachments: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+            },
         },
     });
 
     return (
         <>
-            {courses ? (
+            {courses.length > 0 ? (
                 <div className="items-center m-4 mt-16">
                     <h1 className="text-lg font-semibold md:text-2xl">Courses</h1>
                     <DataTable columns={columns} data={courses} />
                 </div>
             ) : (
-                <div
-                    className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm m-4 p-10 mt-16" x-chunk="dashboard-02-chunk-1"
-                >
+                <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm m-4 p-10 mt-16">
                     <div className="flex flex-col items-center gap-1 text-center">
                         <h3 className="text-2xl font-bold tracking-tight">
                             You have no courses
@@ -49,7 +61,7 @@ const Courses = async () => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
 export default Courses;

@@ -17,8 +17,7 @@ datasource db {
 
 model Course {
   id          String  @id @default(uuid())
-  userId      String 
-  
+  userId      String
   title       String  @db.Text
   description String? @db.Text
   imageUrl    String? @db.Text
@@ -29,7 +28,6 @@ model Course {
   chapters    Chapter[]
   attachments Attachment[]
   purchases   Purchase[]
-  subscriptions Subscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,9 +66,6 @@ model Chapter {
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  subscriptionId String?
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
 
@@ -111,9 +106,6 @@ model Purchase {
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  subscriptionId String?
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-
   createdAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -126,31 +118,6 @@ model StripeCustomer {
   userId           String @unique
   stripeCustomerId String @unique
 
-  subscriptions Subscription[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Subscription {
-  id          String          @id @default(uuid())
-  userId      String
-  stripeCustomerId String
-  type        SubscriptionType
-  isActive    Boolean         @default(true)
-
-  courses     Course[]
-  purchases   Purchase[]
-  chapters    Chapter[]
-
-  stripeCustomer StripeCustomer @relation(fields: [stripeCustomerId], references: [id], onDelete: Cascade)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-enum SubscriptionType {
-  FREE
-  BASIC
-  PRO
 }

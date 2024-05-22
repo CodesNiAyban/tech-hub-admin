@@ -1,13 +1,13 @@
 "use client"
 
-import { teacherRoutes } from "../(sidebar)/sidebar-routes";
+import { adminRoutes } from "../(sidebar)/sidebar-routes";
 import NavBarItem from "./navbar-item";
 
 export const NavBarRoutes = () => {
 
     return (
         <nav className="grid gap-2 text-lg font-medium">
-            {teacherRoutes.map((route) => (
+            {adminRoutes.map((route) => (
                 <NavBarItem
                     key={route.href}
                     icon={route.icon}

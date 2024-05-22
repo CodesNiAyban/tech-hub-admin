@@ -21,7 +21,7 @@ const AnalyticsPage = async (params: AnalyticsPageParams) => {
     return redirect("/");
   }
 
-  const { data, totalRevenue, totalSales } = await getAnalytics(userId);
+  const { data, totalRevenue, totalSales } = await getAnalytics();
 
   return (
     <div className="p-6 mt-10">

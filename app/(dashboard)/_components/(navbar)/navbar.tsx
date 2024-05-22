@@ -9,10 +9,8 @@ import {
     Menu
 } from "lucide-react"
 import Link from "next/link"
-import { MobileSubscriptionCard } from "../(sidebar)/mobile-subscription-card"
 import { NavBarRoutes } from "./navbar-routes"
 import SearchComponent from "./search"
-import { TeacherStudentButton } from "./teacher-student-button"
 
 export const DashboardNavBar = () => {
     return (
@@ -31,16 +29,12 @@ export const DashboardNavBar = () => {
                 <SheetContent side="left" className="flex flex-col">
                     <LogoPhone />
                     <NavBarRoutes />
-                    <div className="mt-auto">
-                        <MobileSubscriptionCard />
-                    </div>
                 </SheetContent>
             </Sheet>
             <div className="w-full flex items-center gap-x-3 justify-between bg-transparent"> {/* Added flex and justify-between classes */}
                 <div className="flex-1 bg-transparent"> {/* Added flex-1 class to make it take remaining space */}
                     <SearchComponent />
                 </div>
-                <TeacherStudentButton />
                 <ModeToggle />
                 <ClerkLoading>
                     <Loader2 className="h-5 w-5 text-muted-foreground animate-spin" />
