@@ -9,12 +9,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 import { CourseTableActions } from "./course-table-actions";
-import UserCell from "./user-cell";
+import { User } from "@clerk/nextjs/server";
 
-// Define the extended course type
 interface ExtendedCourse extends Course {
     categories: { name: string }[];
     chapters: { isPublished: boolean; position: number }[];
+    user: User;
 }
 
 export const columns: ColumnDef<ExtendedCourse>[] = [
@@ -77,7 +77,7 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
         }
     },
     {
-        accessorKey: "userId",
+        accessorKey: "user.username",
         header: ({ column }) => {
             return (
                 <Button
@@ -89,7 +89,10 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
                 </Button>
             );
         },
-        cell: ({ row }) => <UserCell userId={row.original.userId} /> // Use the UserCell component
+        cell: ({ row }) => {
+            const user = row.original.user;
+            return user ? <div>{user.username}</div> : <div>Unknown</div>;
+        }
     },
     {
         id: "actions",
