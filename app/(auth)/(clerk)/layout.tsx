@@ -1,6 +1,8 @@
 import { siteConfig } from "@/config/site";
+import { auth } from "@clerk/nextjs/server";
 import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import { redirect } from "next/navigation";
 
 //TODO: Improve page, add more contents, add animations
 export const metadata: Metadata = {
@@ -12,6 +14,12 @@ const MarketingLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
+    const { userId } = auth();
+
+    if (userId) {
+        redirect("/")
+    }
+
     return (
         <ThemeProvider
             attribute="class"
