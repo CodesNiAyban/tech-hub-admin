@@ -69,7 +69,7 @@ model Chapter {
 
   userProgress UserProgress[]
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
@@ -92,7 +92,7 @@ model UserProgress {
 
   isCompleted Boolean @default(false)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, chapterId])
@@ -106,7 +106,7 @@ model Purchase {
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])

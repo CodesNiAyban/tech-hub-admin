@@ -8,6 +8,7 @@ import { CoursePrice } from "../_components/(course)/(sell)/course-price";
 import { CourseAttachment } from "../_components/(course)/(attachments)/course-attachments";
 import { Banner } from "@/components/banner";
 import { CourseActions } from "../../_components/course-actions";
+import { checkRole } from "@/lib/role";
 
 const CourseIdPage = async ({
     params
@@ -16,14 +17,13 @@ const CourseIdPage = async ({
 }) => {
     const { userId } = auth();
 
-    if (!userId) {
-        return redirect("/")
-    }
+    if (!userId) return redirect("/")
+    
+    if (!checkRole("admin")) return redirect("/")
 
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,
-            userId
         },
         include: {
             chapters: {

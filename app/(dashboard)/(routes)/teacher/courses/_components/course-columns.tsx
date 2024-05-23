@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { formatPrice } from "@/lib/format";
 import { Course } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pencil, Users } from "lucide-react";
 import Link from "next/link";
 import { CourseTableActions } from "./course-table-actions";
 import { User } from "@clerk/nextjs/server";
@@ -15,6 +15,7 @@ interface ExtendedCourse extends Course {
     categories: { name: string }[];
     chapters: { isPublished: boolean; position: number }[];
     user: User;
+    purchases: { id: string; userId: string; createdAt: Date }[];
 }
 
 export const columns: ColumnDef<ExtendedCourse>[] = [
@@ -95,6 +96,28 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
         }
     },
     {
+        accessorKey: "purchases",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Purchases
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            const purchases = row.original.purchases;
+            return (
+                <div>
+                    {purchases.length} Purchases
+                </div>
+            );
+        }
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
             const { id } = row.original;
@@ -125,6 +148,12 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
                                 <DropdownMenuItem>
                                     <Pencil className="h-4 w-4 mr-2 ml-1" />
                                     Edit
+                                </DropdownMenuItem>
+                            </Link>
+                            <Link href={`/teacher/courses/${id}/users`}>
+                                <DropdownMenuItem>
+                                    <Users className="h-4 w-4 mr-2 ml-1" />
+                                    Users
                                 </DropdownMenuItem>
                             </Link>
                             <CourseTableActions
