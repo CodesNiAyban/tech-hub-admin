@@ -1,74 +1,60 @@
-"use client"
+"use client";
+import { CourseProgress } from "@/components/course-progress";
 import { Button } from "@/components/ui/button";
 import { User } from "@clerk/nextjs/server";
-import { Course } from "@prisma/client";
+import { Course, Purchase } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 
-interface ExtendedCourse extends Course {
+interface ExtendedPurchase extends Purchase {
     user: User;
-    purchases: { id: string; userId: string; createdAt: Date }[];
+    chapterProgress: { chapterTitle: string, completed: boolean }[];
+    completedCourse: boolean;
+    currentChapter: string;
+    progressCount: number; // Add progressCount to the interface
 }
 
-export const columns: ColumnDef<ExtendedCourse>[] = [
+export const columns: ColumnDef<ExtendedPurchase>[] = [
     {
         accessorKey: "user.username",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Username
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Username
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
             const user = row.original.user;
-            const imageUrl = row.original.user.imageUrl;
-            return user ? <div className="flex items-center">
-                <Image
-                    src={imageUrl as string}
-                    alt="Profile"
-                    width={40} // Set appropriate width
-                    height={40} // Set appropriate height
-                    className="h-10 w-10 rounded-full mr-4"
-                />
-                {user.username}
-            </div> : <div>Unknown</div>;
+            const imageUrl = user?.imageUrl;
+            return user ? (
+                <div className="flex items-center">
+                    <Image
+                        src={imageUrl as string}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-full mr-4"
+                    />
+                    {user.username}
+                </div>
+            ) : <div>Unknown</div>;
         }
     },
-    // {
-    //     accessorKey: "user.imageUrl",
-    //     header: "Profile Image",
-    //     cell: ({ row }) => {
-    //         const imageUrl = row.original.user.imageUrl;
-    //         return (
-    //             <Image
-    //                 src={imageUrl as string}
-    //                 alt="Profile"
-    //                 width={40} // Set appropriate width
-    //                 height={40} // Set appropriate height
-    //                 className="h-10 w-10 rounded-full"
-    //             />
-    //         );
-    //     }
-    // },
     {
         accessorKey: "user.emailAddresses",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Email
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
             const user = row.original.user;
             const emailAddresses = user?.emailAddresses || [];
@@ -79,56 +65,63 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Created At
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Purchase Date
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
-            const createdAt = new Date(row.getValue("createdAt"));
-            return createdAt.toLocaleDateString();
+            const createdAt = new Date(row.original.createdAt);
+            return createdAt.toLocaleString();
         }
     },
     {
-        accessorKey: "updatedAt",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Updated At
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "currentChapter",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Current Chapter
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
-            const updatedAt = new Date(row.getValue("updatedAt"));
-            return updatedAt.toLocaleDateString();
+            return <span>{row.original.currentChapter}</span>;
         }
     },
     {
-        accessorKey: "lastSignInAt",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Last Sign-In
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "completedCourse",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Completed Course
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
         cell: ({ row }) => {
-            const lastSignInAt = new Date(row.getValue("lastSignInAt"));
-            return lastSignInAt.toLocaleString();
+            return <span>{row.original.completedCourse ? "Yes" : "No"}</span>;
         }
     },
+    {
+        accessorKey: "progressCount",
+        header: ({ column }) => (
+            <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+                Progress
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+        ),
+        cell: ({ row }) => {
+            return <CourseProgress variant="success" value={row.original.progressCount} />;
+        }
+    }
 ];

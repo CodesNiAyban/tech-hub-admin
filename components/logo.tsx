@@ -15,10 +15,10 @@ export const Logo = () => {
         <p
           className={cn(
             "font-bold", // Use a bold font
-            "text-yellow-500" 
+            "text-yellow-500"
           )}
         >
-          <span className="text-foreground mr-[0.5px]">Tech</span>
+          <span className="text-foreground mr-[0.5px]">Admin</span>
           <span className="bg-primary text-black rounded-md px-1 py-1">
             Hub
           </span>

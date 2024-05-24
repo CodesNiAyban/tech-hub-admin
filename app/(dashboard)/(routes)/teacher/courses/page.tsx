@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/course-columns";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 
 const Courses = async () => {
@@ -63,12 +64,22 @@ const Courses = async () => {
     return (
         <>
             {courses.length > 0 ? (
-                <div className="items-center p-6 mt-10">
+                <div className="p-6 mt-10">
                     <Breadcrumb className="pb-3 mt-3">
                         <BreadcrumbList>
                             <BreadcrumbItem>
                                 <BreadcrumbLink href="/teacher/courses">Courses</BreadcrumbLink>
                             </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="flex items-center gap-1">
+                                    <BreadcrumbEllipsis className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start">
+                                    <DropdownMenuItem>Design Ugh</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </BreadcrumbList>
                     </Breadcrumb>
                     <DataTable columns={columns} data={data} />

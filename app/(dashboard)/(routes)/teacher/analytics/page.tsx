@@ -1,17 +1,18 @@
 import { getAnalytics } from "@/app/actions/get-analytics";
-import { checkRole } from "@/lib/role";
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { Chart } from "./_components/chart";
-import { DataCard } from "./_components/data-card";
 import {
   Breadcrumb,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+  BreadcrumbSeparator
+} from "@/components/ui/breadcrumb";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { checkRole } from "@/lib/role";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { Chart } from "./_components/chart";
+import { DataCard } from "./_components/data-card";
 
 // Define the type for params
 type AnalyticsPageParams = {
@@ -33,11 +34,21 @@ const AnalyticsPage = async (params: AnalyticsPageParams) => {
 
   return (
     <div className="p-6 mt-10">
-      <Breadcrumb className="pb-8 mt-3">
+      <Breadcrumb className="pb-3 mt-3">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/teacher/analytics">Analytics</BreadcrumbLink>
           </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1">
+              <BreadcrumbEllipsis className="h-4 w-4" />
+              <span className="sr-only">Toggle menu</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem>Design Ugh</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </BreadcrumbList>
       </Breadcrumb>
 

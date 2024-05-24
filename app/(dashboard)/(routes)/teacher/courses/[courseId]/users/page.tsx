@@ -1,11 +1,9 @@
-import { Button } from "@/components/ui/button";
 import db from "@/lib/db";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-
 import { DataTable } from "../../_components/data-table";
 import { columns } from "../../_components/user-columns";
+import { getProgress } from "@/app/actions/get-progress";
 
 const CourseUsers = async ({
     params
@@ -19,26 +17,22 @@ const CourseUsers = async ({
     } // TODO: Change to admin check
 
     try {
-        const purchase = await db.purchase.findMany({
-            where: {
-                courseId: params.courseId,
-            },
-            orderBy: {
-                createdAt: "asc",
-            }
-        });
-
         const course = await db.course.findUnique({
-            where: {
-                id: params.courseId
-            },
+            where: { id: params.courseId },
             include: {
                 purchases: {
-                    orderBy: {
-                        createdAt: "desc",
-                    },
+                    orderBy: { createdAt: "desc" }
                 },
-            },
+                chapters: {
+                    where: { isPublished: true },
+                    include: {
+                        userProgress: {
+                            where: { userId },
+                        }
+                    },
+                    orderBy: { position: "asc" }
+                }
+            }
         });
 
         if (!course) {
@@ -57,31 +51,29 @@ const CourseUsers = async ({
         }
 
         const selectedCourse = course.title;
+        const users = await clerkClient.users.getUserList();
+        const parsedUsers = JSON.parse(JSON.stringify(users.data));
 
-        let users = [];
-        try {
-            const userResponse = await clerkClient.users.getUserList();
-            users = JSON.parse(JSON.stringify(userResponse.data));
-        } catch (error) {
-            console.error("Error parsing user data:", error);
-        }
-    
-        const data = course.purchases.map(purchase => {
-            const user = users.find((user: { id: string }) => user.id === purchase.userId);
+        const data = await Promise.all(course.purchases.map(async purchase => {
+            const user = parsedUsers.find((user: { id: string }) => user.id === purchase.userId);
+            const chapterProgress = course.chapters.map(chapter => {
+                const progress = chapter.userProgress[0];
+                return {
+                    chapterTitle: chapter.title,
+                    completed: progress ? progress.isCompleted : false
+                };
+            });
+            const completedCourse = chapterProgress.every(ch => ch.completed);
+            const progressCount = await getProgress(purchase.userId, course.id); // Get progress count for each user
             return {
-                ...course,
-                user: user,
+                ...purchase,
+                user,
+                chapterProgress,
+                completedCourse,
+                currentChapter: chapterProgress.find(ch => !ch.completed)?.chapterTitle || "Completed",
+                progressCount // Add progressCount to the data
             };
-        });
-
-        // const data = course.purchases.map(purchase => {
-        //     const user = users.find(user => user.id === purchase.userId) || { id: purchase.userId, username: "Unknown" };
-        //     return {
-        //         ...course,
-        //         ...purchase,
-        //         user,
-        //     };
-        // });
+        }));
 
         return (
             <div className="items-center m-4 mt-16">
