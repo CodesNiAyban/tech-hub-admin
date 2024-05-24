@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/course-columns";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 
 
 const Courses = async () => {
@@ -13,7 +14,7 @@ const Courses = async () => {
     if (!userId) {
         return redirect("/");
     }
-    
+
 
     const courses = await db.course.findMany({
         orderBy: {
@@ -62,8 +63,14 @@ const Courses = async () => {
     return (
         <>
             {courses.length > 0 ? (
-                <div className="items-center m-4 mt-16">
-                    <h1 className="text-lg font-semibold md:text-2xl">Courses</h1>
+                <div className="items-center p-6 mt-10">
+                    <Breadcrumb className="pb-3 mt-3">
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/teacher/courses">Courses</BreadcrumbLink>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                     <DataTable columns={columns} data={data} />
                 </div>
             ) : (

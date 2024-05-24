@@ -9,22 +9,22 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const columns: ColumnDef<User>[] = [
-    {
-        accessorKey: "imageUrl",
-        header: "Profile Image",
-        cell: ({ row }) => {
-            const imageUrl = row.getValue("imageUrl");
-            return (
-                <Image
-                    src={imageUrl as string}
-                    alt="Profile"
-                    width={40} // Set appropriate width
-                    height={40} // Set appropriate height
-                    className="h-10 w-10 rounded-full"
-                />
-            );
-        }
-    },
+    // {
+    //     accessorKey: "imageUrl",
+    //     header: "Profile Image",
+    //     cell: ({ row }) => {
+    //         const imageUrl = row.getValue("imageUrl");
+    //         return (
+    //             <Image
+    //                 src={imageUrl as string}
+    //                 alt="Profile"
+    //                 width={40} // Set appropriate width
+    //                 height={40} // Set appropriate height
+    //                 className="h-10 w-10 rounded-full"
+    //             />
+    //         );
+    //     }
+    // },
     {
         accessorKey: "username",
         header: ({ column }) => {
@@ -38,6 +38,20 @@ export const columns: ColumnDef<User>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            const user = row.original;
+            const imageUrl = row.original.imageUrl;
+            return user ? <div className="flex items-center">
+                <Image
+                    src={imageUrl as string}
+                    alt="Profile"
+                    width={40} // Set appropriate width
+                    height={40} // Set appropriate height
+                    className="h-10 w-10 rounded-full mr-4"
+                />
+                {user.username}
+            </div> : <div>Unknown</div>;
+        }
     },
     {
         accessorKey: "emailAddresses",

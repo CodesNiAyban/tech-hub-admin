@@ -70,7 +70,7 @@ const CourseUsers = async ({
             const user = users.find((user: { id: string }) => user.id === purchase.userId);
             return {
                 ...course,
-                user: user || { id: course.userId, username: "Unknown" },
+                user: user,
             };
         });
 
