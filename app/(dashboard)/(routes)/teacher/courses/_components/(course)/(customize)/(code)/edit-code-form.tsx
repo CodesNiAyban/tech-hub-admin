@@ -1,8 +1,9 @@
 "use client"
 
+import { codeSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Course } from "@prisma/client";
@@ -12,60 +13,67 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { descriptionSchema } from "../../../_utils/form-validation";
 
-interface EditDescriptionProps {
+interface CodeFormProps {
     initialData: Course
     courseId: string;
     formLabel: string
     toggleModal: () => void
 }
 
-export const EditDescriptionForm = ({
+export const EditCodeForm = ({
     initialData,
     courseId,
     formLabel,
     toggleModal
-}: EditDescriptionProps) => {
+}: CodeFormProps) => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false); // State variable for submission status
 
-    const form = useForm<z.infer<typeof descriptionSchema>>({
-        resolver: zodResolver(descriptionSchema),
-        defaultValues: {
-            description: initialData?.description || ""
-        },
+    const form = useForm<z.infer<typeof codeSchema>>({
+        resolver: zodResolver(codeSchema),
+        defaultValues: initialData,
     });
 
-    const editDescription = async (values: z.infer<typeof descriptionSchema>) => {
-        setIsSubmitting(true); // Set submission status to true
+    const editCode = async (values: z.infer<typeof codeSchema>) => {
+        setIsSubmitting(true);
         try {
             const response = await axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
             return response;
-        } catch (error) {
-            console.log(error)
-            throw error;
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    if (error.response.status === 403) {
+                        throw new Error("Duplicate code");
+                    }
+                }
+            }
+            if (error)
+                throw error.toString();
         } finally {
-            setIsSubmitting(false); // Reset submission status to false
-            toggleModal()
+            setIsSubmitting(false);
+            toggleModal();
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof descriptionSchema>) => {
+    const onSubmit = async (values: z.infer<typeof codeSchema>) => {
         try {
             const response = await toast.promise(
-                editDescription(values)
-                , {
+                editCode(values),
+                {
                     loading: "Processing",
-                    error: "An error occured, please try again later.",
-                    success: "Course Description Updated!"
-                });
+                    error: (error) => {
+                        return error.message === "Duplicate code" ? "Duplicate code, please try another title." : "An error occurred, please try again later.";
+                    },
+                    success: "Course Code Updated!"
+                }
+            );
             return response;
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     return (
         <Form {...form}>
@@ -74,18 +82,17 @@ export const EditDescriptionForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="code"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="font-medium flex items-center justify-between">
                                         {formLabel}
                                     </FormLabel>
                                     <FormControl>
-                                        <Textarea
+                                        <Input
                                             {...field}
                                             disabled={isSubmitting} // Disable input field while submitting
-                                            placeholder="e.g. 'This course is about..."
-                                            className="resize-none"
+                                            placeholder="e.g Advanced Web Development"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -101,6 +108,4 @@ export const EditDescriptionForm = ({
         </Form>
     );
 };
-
-
 

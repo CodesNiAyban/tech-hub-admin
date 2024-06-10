@@ -2,6 +2,7 @@
 
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
+import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,7 +24,7 @@ export const ChapterActions = ({
 }: ChapterActionsProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-
+    const confetti = useConfettiStore()
 
     const publishChapter = async () => {
         try {
@@ -45,32 +46,30 @@ export const ChapterActions = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.error(error)
+            throw error
         }
     }
 
     const onClick = async () => {
         try {
+            let response;
             setIsLoading(true);
             if (isPublished) {
-                const response = unpublishChapter()
-                toast.promise(response, {
+                response = toast.promise(unpublishChapter(), {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
                     success: "Chapter unpublished"
                 });
             } else {
-                const response = publishChapter()
-                toast.promise(response, {
+                response = toast.promise(publishChapter(), {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
                     success: "Chapter published"
                 });
             }
+            confetti.onOpen();
+            return response;
         } catch (error) {
             console.log(error)
         } finally {
@@ -85,23 +84,20 @@ export const ChapterActions = ({
             router.push(`/teacher/courses/${courseId}`)
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+           console.error(error)
+           throw error
         }
     }
 
     const onDelete = async () => {
         try {
             setIsLoading(true);
-            const response = deleteChapter();
-            toast.promise(response, {
+            const response = toast.promise(deleteChapter(), {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
                 success: "Chapter deleted"
             });
+            return response;
         } catch (error) {
             console.log(error)
         } finally {
