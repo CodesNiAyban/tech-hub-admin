@@ -16,11 +16,9 @@ datasource db {
 }
 
 model Course {
-  id     String @id @default(uuid())
-  userId String
-
-  code  String  @unique @db.Text
-  title       String  @unique @db.Text
+  id          String  @id @default(uuid())
+  userId      String
+  title       String  @db.Text
   description String? @db.Text
   imageUrl    String? @db.Text
   price       Float?
@@ -56,13 +54,13 @@ model Attachment {
 }
 
 model Chapter {
-  id           String            @id @default(uuid())
-  title        String
-  description  String?           @db.Text
-  videoUrl     String?           @db.Text
-  position     Int
-  isPublished  Boolean           @default(false)
-  subscription SubscriptionType? @default(null)
+  id          String  @id @default(uuid())
+  title       String
+  description String? @db.Text
+  videoUrl    String? @db.Text
+  position    Int
+  isPublished Boolean @default(false)
+  isFree      Boolean @default(false)
 
   muxData MuxData?
 
@@ -116,26 +114,10 @@ model Purchase {
 }
 
 model StripeCustomer {
-  id               String  @id @default(uuid())
-  userId           String  @unique
-  stripeCustomerId String? @unique
-
-  status       subscriptionStatus @default(INACTIVE)
-  subscription SubscriptionType?  @default(null)
+  id               String @id @default(uuid())
+  userId           String @unique
+  stripeCustomerId String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-enum subscriptionStatus {
-  INACTIVE
-  ACTIVE
-  CANCELED
-}
-
-enum SubscriptionType {
-  null
-  BASIC
-  PRO
-  LIFETIME
 }

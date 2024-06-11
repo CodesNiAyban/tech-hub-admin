@@ -16,9 +16,9 @@ import * as z from "zod";
 
 interface ChapterTitleFormProps {
     initialData: Chapter
-    courseId: string;
-    chapterId: string;
-    toggleModal: () => void
+	courseId: string;
+	chapterId: string;
+	toggleModal: () => void
     formLabel: string
 }
 
@@ -44,8 +44,11 @@ export const EditChapterTitleForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            console.error(error)
-            throw error
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -54,14 +57,12 @@ export const EditChapterTitleForm = ({
 
     const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            const response = toast.promise(
-                editChapterTitle(values),
-                {
-                    loading: "Processing",
-                    error: "An error occured, please try again later.",
-                    success: "Chapter Title Updated!"
-                }
-            );
+            const response = editChapterTitle(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Chapter Title Updated!"
+            });
         } catch (error) {
             console.log(error)
         }

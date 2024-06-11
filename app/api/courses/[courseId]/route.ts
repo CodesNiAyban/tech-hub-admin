@@ -2,10 +2,6 @@ import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import Mux from "@mux/mux-node";
-import { UTApi } from "uploadthing/server";
-
-export const utapi = new UTApi();
-
 
 const mux = new Mux({
     tokenId: process.env.MUX_TOKEN_ID!,
@@ -33,8 +29,7 @@ export async function DELETE(
                     include: {
                         muxData: true,
                     }
-                },
-                attachments: true,
+                }
             }
         });
 
@@ -47,17 +42,6 @@ export async function DELETE(
                 await mux.video.assets.delete(chapter.muxData!.assetId);
             }
         }
-
-        for (const attachment of course.attachments) {
-            await utapi.deleteFiles(attachment?.name!);
-            await db.attachment.delete({
-                where: {
-                    id: attachment.id,
-                }
-            });
-        }
-
-        if (course.imageUrl) await utapi.deleteFiles(course.imageUrl.split("/").pop() || "");
 
         const deletedCourse = await db.course.delete({
             where: {
@@ -82,47 +66,6 @@ export async function PATCH(
 
         if (!userId) {
             return new NextResponse("Unathorized", { status: 401 })
-        }
-
-        if (values.title) {
-            const existingCourseByTitle = await db.course.findUnique({
-                where: {
-                    title: values.title,
-                },
-            });
-
-            if (existingCourseByTitle && existingCourseByTitle.id !== courseId) {
-                return new NextResponse("Title must be unique", { status: 403 });
-            }
-        }
-
-        if (values.code) {
-            const existingCourseByCode = await db.course.findUnique({
-                where: {
-                    code: values.code,
-                },
-            });
-
-            if (existingCourseByCode && existingCourseByCode.id !== courseId) {
-                return new NextResponse("Code must be unique", { status: 403 });
-            }
-        }
-
-        const currentCourse = await db.course.findUnique({
-            where: {
-                id: courseId,
-                userId
-            }
-        });
-
-        if (!currentCourse) {
-            return new NextResponse("Course Not Found", { status: 404 });
-        }
-
-        if (values.imageUrl) {
-            if (currentCourse.imageUrl) {
-                await utapi.deleteFiles(currentCourse.imageUrl.split("/").pop() || "");
-            }
         }
 
         const course = await db.course.update({

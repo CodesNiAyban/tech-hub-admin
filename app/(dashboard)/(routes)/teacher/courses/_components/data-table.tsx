@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
-
+import * as React from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -12,10 +11,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@tanstack/react-table";
 import {
     Table,
     TableBody,
@@ -23,22 +19,25 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { CreateCourseDialog } from "../../_components/create-course"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { PlusCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
-    )
+    );
     const table = useReactTable({
         data,
         columns,
@@ -52,7 +51,7 @@ export function DataTable<TData, TValue>({
             sorting,
             columnFilters,
         },
-    })
+    });
 
     return (
         <div>
@@ -65,9 +64,12 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
-
-                <CreateCourseDialog />
-
+                <Button asChild>
+                    <Link href="/teacher/create">
+                        <PlusCircle className="h-4 w-4 mr-2" />
+                        Add New Course
+                    </Link>
+                </Button>
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -84,7 +86,7 @@ export function DataTable<TData, TValue>({
                                                     header.getContext()
                                                 )}
                                         </TableHead>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}
@@ -132,5 +134,5 @@ export function DataTable<TData, TValue>({
                 </Button>
             </div>
         </div>
-    )
+    );
 }

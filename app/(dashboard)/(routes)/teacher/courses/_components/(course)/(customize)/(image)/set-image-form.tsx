@@ -33,7 +33,6 @@ export const EditImageForm = ({
             return response;
         } catch (error) {
             console.log(error)
-            throw error;
         } finally {
             toggleModal()
         }
@@ -41,14 +40,18 @@ export const EditImageForm = ({
 
     const onSubmit = async (values: z.infer<typeof imageSchema>) => {
         try {
-            const response = toast.promise(setImage(values), {
+            const response = setImage(values);
+            toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
                 success: "Course Image Updated!"
             });
-            return response;
         } catch (error) {
-           console.log(error)
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         }
     }
 

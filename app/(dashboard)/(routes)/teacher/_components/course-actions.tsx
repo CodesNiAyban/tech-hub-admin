@@ -8,7 +8,6 @@ import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useTransition } from 'react';
 
 interface CourseActionsProps {
     isComplete: boolean;
@@ -24,14 +23,11 @@ export const CourseActions = ({
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const confetti = useConfettiStore();
-    const [isPending, startTransition] = useTransition();
 
     const publishCourse = async () => {
         try {
             const response = await axios.patch(`/api/courses/${courseId}/publish`);
-            startTransition(() => {
-                router.refresh();
-            });
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -45,9 +41,7 @@ export const CourseActions = ({
     const unpublishCourse = async () => {
         try {
             const response = await axios.patch(`/api/courses/${courseId}/unpublish`);
-             startTransition(() => {
-                router.refresh();
-            });
+            router.refresh();
             return response;
         } catch (error) {
             if (typeof error === 'string') {
@@ -87,9 +81,7 @@ export const CourseActions = ({
     const deleteCourse = async () => {
         try {
             const response = await axios.delete(`/api/courses/${courseId}`)
-             startTransition(() => {
-                router.refresh();
-            });
+            router.refresh();
             router.push(`/teacher/courses`)
             return response;
         } catch (error) {

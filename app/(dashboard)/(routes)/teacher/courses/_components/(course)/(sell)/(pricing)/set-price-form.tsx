@@ -44,8 +44,11 @@ export const EditPriceForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            console.log(error)
-            throw error
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         } finally {
             setIsSubmitting(false);
             toggleModal()
@@ -54,12 +57,12 @@ export const EditPriceForm = ({
 
     const onSubmit = async (values: z.infer<typeof priceSchema>) => {
         try {
-            const response = toast.promise(editPrice(values), {
+            const response = editPrice(values);
+            toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
                 success: "Course Price Updated!"
             });
-            return response;
         } catch (error) {
             console.log(error)
         }

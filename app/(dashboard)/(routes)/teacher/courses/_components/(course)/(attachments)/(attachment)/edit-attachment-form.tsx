@@ -29,8 +29,11 @@ export const EditAttachmentForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            console.error(error)
-            throw error
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         } finally {
             toggleModal()
         }
@@ -38,17 +41,14 @@ export const EditAttachmentForm = ({
 
     const onSubmit = async (values: z.infer<typeof attachmentSchema>) => {
         try {
-
-            const response = toast.promise(
-                editAttachment(values),
-                {
-                    loading: "Processing",
-                    error: "An error occured, please try again later.",
-                    success: "Attachment Added!"
-                });
-                return response;
+            const response = editAttachment(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Attachment Added!"
+            });
         } catch (error) {
-            console.log(error)
+           console.log(error)
         }
     }
 

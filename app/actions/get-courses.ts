@@ -1,6 +1,7 @@
 import { Category, Course } from "@prisma/client";
 
 import { getProgress } from "@/app/actions/get-progress";
+import { Categories } from "@/app/(dashboard)/(routes)/(browse)/_components/categories";
 import db from "@/lib/db";
 
 type CourseWithProgressWithCategory = Course & {
@@ -12,7 +13,7 @@ type CourseWithProgressWithCategory = Course & {
 type GetCourses = {
     userId?: string;
     title?: string;
-    categoryId?: string; 
+    categoryId?: string; // Maybe this will be a culprit in array category search
 };
 
 export const getCourses = async ({
@@ -53,7 +54,7 @@ export const getCourses = async ({
                         userId,
                     },
                     select: {
-                        id: true, 
+                        id: true, // Include only the fields that actually exist
                     }
                 }
             },

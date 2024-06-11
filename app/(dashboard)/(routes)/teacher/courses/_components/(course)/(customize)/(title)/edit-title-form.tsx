@@ -41,16 +41,12 @@ export const EditTitleForm = ({
             const response = await axios.patch(`/api/courses/${courseId}`, values);
             router.refresh();
             return response;
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                if (error.response) {
-                    if (error.response.status === 403) {
-                        throw new Error("Duplicate title");
-                    }
-                }
+        } catch (error) {
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
             }
-            if (error)
-                throw error.toString();
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -59,17 +55,12 @@ export const EditTitleForm = ({
 
     const onSubmit = async (values: z.infer<typeof titleSchema>) => {
         try {
-            const response = await toast.promise(
-                editTitle(values),
-                {
-                    loading: "Processing",
-                    error: (error) => {
-                        return error.message === "Duplicate title" ? "Duplicate title, please try another title." : "An error occurred, please try again later.";
-                    },
-                    success: "Course Title Updated!"
-                }
-            );
-            return response;
+            const response = editTitle(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Course Title Updated!"
+            });
         } catch (error) {
             console.log(error)
         }

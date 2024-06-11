@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
 import { NextResponse } from "next/server";
+
 import { stripe } from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
 import db from "@/lib/db";
@@ -76,23 +77,26 @@ export async function POST(
       });
     }
 
-    if (stripeCustomer.stripeCustomerId === null) {
-      return new NextResponse("No stripe ID", { status: 400 });
-    }
-
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomer.stripeCustomerId,
       line_items,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?canceled=1`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}?success=1`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/course/${course.id}?canceled=1`,
       billing_address_collection: 'auto',
       metadata: {
         courseId: course.id,
         userId: user.id,
-        type: "course"
       },
     });
+
+    await db.purchase.create({
+      data: {
+        userId: user.id,
+        courseId: course.id,
+      },
+    });
+ 
 
     return NextResponse.json({ url: session.url });
   } catch (error) {

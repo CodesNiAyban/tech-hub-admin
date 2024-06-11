@@ -16,19 +16,11 @@ export const createSchema = z.object({
   }),
 });
 
-export const codeSchema = z.object({
-  code: z.string().min(1, {
-    message: "Title is required",
-  }).max(100, {
-    message: "Title cannot exceed 100 characters",
-  }),
-});
-
 export const descriptionSchema = z.object({
   description: z.string().min(1, {
     message: "Description is required",
-  }).max(7000, {
-    message: "Description cannot exceed 7000 characters",
+  }).max(2000, {
+    message: "Description cannot exceed 2000 characters",
   }),
 });
 
@@ -68,7 +60,7 @@ export const chapterSchema = z.object({
 });
 
 export const accessSchema = z.object({
-  subscription: z.string().min(1),
+  isFree: z.boolean().default(false),
 });
 
 export const videoSchema = z.object({

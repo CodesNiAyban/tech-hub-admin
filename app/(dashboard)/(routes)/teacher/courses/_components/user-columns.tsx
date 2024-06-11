@@ -1,22 +1,18 @@
 "use client";
 import { CourseProgress } from "@/components/course-progress";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { User } from "@clerk/nextjs/server";
 import { Course, Purchase } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
-import { UserActions } from "./user-table-actions";
 
 interface ExtendedPurchase extends Purchase {
     user: User;
     chapterProgress: { chapterTitle: string, completed: boolean }[];
     completedCourse: boolean;
     currentChapter: string;
-    progressCount: number;
-    engagementType: string;
-    course: Course;
+    progressCount: number; // Add progressCount to the interface
 }
 
 export const columns: ColumnDef<ExtendedPurchase>[] = [
@@ -32,8 +28,8 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
             </Button>
         ),
         cell: ({ row }) => {
-            const user = row.original.user.username;
-            const imageUrl = row.original.user.imageUrl;
+            const user = row.original.user;
+            const imageUrl = user?.imageUrl;
             return user ? (
                 <div className="flex items-center">
                     <Image
@@ -43,7 +39,7 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
                         height={40}
                         className="h-10 w-10 rounded-full mr-4"
                     />
-                    {user}
+                    {user.username}
                 </div>
             ) : <div>Unknown</div>;
         }
@@ -80,9 +76,6 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
         ),
         cell: ({ row }) => {
             const createdAt = new Date(row.original.createdAt);
-            if (createdAt.toDateString() === "Invalid Date") {
-                return <span>No Purchase Record</span>;
-            }
             return createdAt.toLocaleString();
         }
     },
@@ -130,38 +123,5 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
         cell: ({ row }) => {
             return <CourseProgress variant="success" value={row.original.progressCount} />;
         }
-    },
-    {
-        accessorKey: "engagementType",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Engagement Type
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => {
-            return <span>{row.original.engagementType}</span>;
-        }
-    },
-    {
-        id: "actions",
-        cell: ({ row }) => (
-            <DropdownMenu>
-                <Button variant="ghost" className="h-4 w-8 p-0" asChild>
-                    <DropdownMenuTrigger>
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                </Button>
-                <DropdownMenuContent align="end">
-                    <div className="flex flex-col">
-                        <UserActions courseId={row.original.course.id} userId={row.original.user.id} />
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        ),
-    },
+    }
 ];

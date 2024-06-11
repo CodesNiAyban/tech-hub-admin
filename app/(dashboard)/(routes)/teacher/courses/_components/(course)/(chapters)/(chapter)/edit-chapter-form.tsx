@@ -44,8 +44,11 @@ export const EditChapterForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            console.log(error)
-            throw error
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -54,15 +57,12 @@ export const EditChapterForm = ({
 
     const onSubmit = async (values: z.infer<typeof chapterSchema>) => {
         try {
-            const response = toast.promise(
-                editChapter(values),
-                {
-                    loading: "Processing",
-                    error: "An error occured, please try again later.",
-                    success: "Course Chapter Created"
-                }
-            );
-            return response;
+            const response = editChapter(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Course Chapter Created"
+            });
         } catch (error) {
             console.log(error)
         }

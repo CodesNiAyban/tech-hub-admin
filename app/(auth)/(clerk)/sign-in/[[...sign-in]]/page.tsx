@@ -78,7 +78,7 @@ export default function SignInPage() {
                     <Clerk.Label asChild>
                       <Label>Email address</Label>
                     </Clerk.Label>
-                    <Clerk.Input type="email" required asChild>
+                    <Clerk.Input type="email" required asChild id="identifier">
                       <Input />
                     </Clerk.Input>
                     <Clerk.FieldError className="block text-sm text-destructive" />
@@ -96,9 +96,9 @@ export default function SignInPage() {
                       </Button>
                     </SignIn.Action>
 
-                    <Button variant="link" size="sm" asChild>
+                    {/* <Button variant="link" size="sm" asChild>
                       <Link href="/sign-up">Don&apos;t have an account? Sign up</Link>
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardFooter>
               </Card>

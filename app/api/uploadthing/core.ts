@@ -10,6 +10,8 @@ const handleAuth = () => {
     return { userId };
 }
 
+const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
+
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
     courseImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })

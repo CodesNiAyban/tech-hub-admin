@@ -14,7 +14,6 @@ import * as z from "zod";
 import { Chapter } from "@prisma/client";
 import { accessSchema } from "../../../../../_utils/form-validation";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface EditChapterAccessProps {
     initialData: Chapter;
@@ -37,7 +36,7 @@ export const EditChapterAccessForm = ({
     const form = useForm<z.infer<typeof accessSchema>>({
         resolver: zodResolver(accessSchema),
         defaultValues: {
-            subscription: initialData.subscription || ""
+            isFree: Boolean(initialData.isFree)
         },
     });
 
@@ -48,8 +47,11 @@ export const EditChapterAccessForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            console.error(error)
-            throw error
+            if (typeof error === 'string') {
+                toast.error(error);
+            } else {
+                toast.error("An error occurred. Please try again later.");
+            }
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -58,14 +60,12 @@ export const EditChapterAccessForm = ({
 
     const onSubmit = async (values: z.infer<typeof accessSchema>) => {
         try {
-            const response = toast.promise(
-                editAccess(values),
-                {
-                    loading: "Processing",
-                    error: "An error occured, please try again later.",
-                    success: "Chapter Access Updated!"
-                }
-            );
+            const response = editAccess(values);
+            toast.promise(response, {
+                loading: "Processing",
+                error: "An error occured, please try again later.",
+                success: "Chapter Access Updated!"
+            });
         } catch (error) {
             console.log(error)
         }
@@ -78,22 +78,22 @@ export const EditChapterAccessForm = ({
                     <div className="grid gap-3">
                         <FormField
                             control={form.control}
-                            name="subscription"
+                            name="isFree"
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center space-x-3 rounded-md border p-4">
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <div className="flex items-center space-x-3">
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a verified email to display" />
-                                            </SelectTrigger>
-
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
                                         </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="null">Free</SelectItem>
-                                            <SelectItem value="BASIC">Basic</SelectItem>
-                                            <SelectItem value="PRO">Pro</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                        <div className="space-y-1">
+                                            <FormDescription>
+                                                Check this box if you want to make this chapter free for preview
+                                            </FormDescription>
+                                        </div>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -106,3 +106,6 @@ export const EditChapterAccessForm = ({
         </Form>
     );
 };
+
+
+
