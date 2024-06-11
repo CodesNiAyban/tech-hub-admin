@@ -3,8 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
 
-
-
 export async function DELETE(
     req: Request,
     { params }: { params: { courseId: string, attachmentId: string } }
