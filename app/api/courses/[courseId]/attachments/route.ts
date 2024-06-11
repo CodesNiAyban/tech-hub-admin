@@ -1,6 +1,9 @@
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { UTApi } from "uploadthing/server";
+
+export const utapi = new UTApi();
 
 export async function POST(
     req: Request,

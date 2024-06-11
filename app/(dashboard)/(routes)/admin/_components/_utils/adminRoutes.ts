@@ -1,4 +1,4 @@
-import { BarChartBig, BookOpen, Compass, Home, Users } from "lucide-react";
+import { BarChartBig, BookOpen, Users } from "lucide-react";
 
 export const adminRoutes = [
     {
@@ -9,7 +9,7 @@ export const adminRoutes = [
     {
         icon: Users,
         label: "Users",
-        href: "/admin/users",
+        href: "/",
     },
     {
         icon: BarChartBig,

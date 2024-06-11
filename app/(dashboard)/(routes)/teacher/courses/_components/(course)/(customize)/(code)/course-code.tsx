@@ -1,22 +1,23 @@
 import { Course } from "@prisma/client";
-import { EditTitleDialog } from "./edit-title-dialog";
+import { EditTitleDialog } from "./edit-code-dialog";
+import { cn } from "@/lib/utils";
 
-interface CourseTitleProps {
+interface CourseCodeProps {
     initialData: Course
     courseId: string;
     toggleModal: () => void
 }
 
-export const CourseTitle = ({
+export const CourseCode = ({
     toggleModal,
     initialData,
     courseId,
-}: CourseTitleProps) => {
+}: CourseCodeProps) => {
     return (
-        <div className="grid gap-6 pt-6">
+        <div className="grid gap-6">
             <div className="grid gap-3">
                 <div className="font-medium flex items-center justify-between">
-                    Course Title
+                    Course Code
                     <EditTitleDialog
                         title={"Edit Title"}
                         formLabel={"New Course Title"}
@@ -27,8 +28,12 @@ export const CourseTitle = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="text-sm flex items-center justify-between">
-                        {initialData.title}
+                    <div className="font-medium flex items-center justify-between">
+                        <p className={cn("text-sm",
+                            !initialData.code && "font-medium text-sm text-muted-foreground italic"
+                        )}>
+                            {initialData.code || "Enter a Course Code"}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -1,12 +1,9 @@
 "use client"
 
 import { FileUpload } from "@/components/file-upload";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Chapter, Course, MuxData } from "@prisma/client";
+import { Chapter, MuxData } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { videoSchema } from "../../../../../_utils/form-validation";
@@ -35,6 +32,7 @@ export const EditVideoForm = ({
             return response;
         } catch (error) {
             console.log(error)
+            throw error
         } finally {
             toggleModal()
         }
@@ -42,12 +40,15 @@ export const EditVideoForm = ({
 
     const onSubmit = async (values: z.infer<typeof videoSchema>) => {
         try {
-            const response = setVideo(values);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Chapter Video Updated!"
-            });
+            const response = toast.promise(
+                setVideo(values),
+                {
+                    loading: "Processing",
+                    error: "An error occured, please try again later.",
+                    success: "Chapter Video Updated!"
+                }
+            );
+            return response;
         } catch (error) {
             if (typeof error === 'string') {
                 toast.error(error);

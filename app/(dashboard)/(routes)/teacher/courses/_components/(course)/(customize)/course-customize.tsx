@@ -14,6 +14,7 @@ import { CourseDescription } from "./(description)/course-description"
 import { CourseImage } from "./(image)/course-image"
 import { CourseTitle } from "./(title)/course-title"
 import { CourseCategories } from "./(categories)/course-categories"
+import { CourseCode } from "./(code)/course-code"
 
 interface TitleFormProps {
     initialData: Course & { categories: Category[] };
@@ -43,6 +44,11 @@ export const CustomizeCourse = ({
                 </CardTitle>
             </CardHeader>
             <CardContent>
+                <CourseCode
+                    initialData={initialData}
+                    courseId={courseId}
+                    toggleModal={toggleModal}
+                />
                 <CourseTitle
                     initialData={initialData}
                     courseId={courseId}
