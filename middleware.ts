@@ -1,11 +1,19 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-const isPublicRoute = createRouteMatcher(['/sign-in', '/api(.*)']);
+const isProtectedRoute = createRouteMatcher([
+  '/courses(.*)',
+  '/home(.*)',
+  '/teacher(.*)',
+  '/admin(.*)',
+  // '/',
+]);
 
 export default clerkMiddleware((auth, req) => {
-  // Add custom logic to run before redirecting // Add notification that session expired
-  if (!isPublicRoute(req) && !auth().userId) {
-    auth().protect();
+  if (!auth().userId && isProtectedRoute(req)) {
+
+    // Add custom logic to run before redirecting // Add notification that session expired
+
+    return auth().redirectToSignIn();
   }
 });
 
