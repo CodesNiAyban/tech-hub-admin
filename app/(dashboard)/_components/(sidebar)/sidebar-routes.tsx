@@ -1,5 +1,5 @@
 "use client"
-import { adminRoutes } from "../../(routes)/admin/_components/_utils/adminRoutes";
+import { adminRoutes } from "../../(routes)/(admin)/_components/_utils/adminRoutes";
 import SideBarItem from "./sidebar-item";
 
 export const SidebarRoutes = () => {

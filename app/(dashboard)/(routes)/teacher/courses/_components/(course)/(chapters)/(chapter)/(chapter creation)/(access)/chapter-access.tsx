@@ -2,6 +2,7 @@ import { Chapter, Course } from "@prisma/client";
 import { EditChapterAccessDialog } from "./set-chapter-access-dialog";
 import { cn } from "@/lib/utils";
 import { Preview } from "@/components/preview";
+import { Badge } from "@/components/ui/badge";
 
 interface ChapterAccessProps {
     initialData: Chapter;
@@ -34,12 +35,21 @@ export const ChapterAccess = ({
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
                     <div className="font-medium flex items-center justify-between">
                         <p className={cn("text-sm",
-                            !initialData.isFree && "font-medium text-sm text-muted-foreground italic"
+                            !initialData.subscription && "font-medium text-sm text-muted-foreground italic",
+                            initialData.subscription !== null && "font-medium text-sm text-muted-foreground italic"
                         )}>
-                            {initialData.isFree ? (
-                                <>This chapter is free for preview</>
+                            {initialData.subscription === "null" ? (
+                                <>This chapter is <Badge variant="muted" className="ml-1 mr-1">FREE</Badge> for preview </>
                             ) : (
-                                <>This chapter is paid</>
+                                <>
+                                    {
+                                        initialData.subscription === "PRO" ? (
+                                            <div className="flex">This chapter is only available to <Badge variant="success" className="ml-1 mr-1">PRO</Badge> and <Badge variant="yellow" className="ml-1 mr-1 text-purple-50">LIFETIME</Badge> users</div>
+                                        ) : (
+                                            <div className="flex">This chapter is only available to <Badge variant="default" className="ml-1 mr-1">BASIC</Badge> users</div>
+                                        )
+                                    }
+                                </>
                             )}
                         </p>
                     </div>

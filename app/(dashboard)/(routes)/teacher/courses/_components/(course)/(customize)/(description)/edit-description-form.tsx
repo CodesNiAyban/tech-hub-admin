@@ -44,11 +44,8 @@ export const EditDescriptionForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
+            throw error;
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
@@ -57,12 +54,14 @@ export const EditDescriptionForm = ({
 
     const onSubmit = async (values: z.infer<typeof descriptionSchema>) => {
         try {
-            const response = editDescription(values);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Course Description Updated!"
-            });
+            const response = await toast.promise(
+                editDescription(values)
+                , {
+                    loading: "Processing",
+                    error: "An error occured, please try again later.",
+                    success: "Course Description Updated!"
+                });
+            return response;
         } catch (error) {
             console.log(error)
         }

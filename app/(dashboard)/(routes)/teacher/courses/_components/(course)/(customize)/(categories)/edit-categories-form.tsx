@@ -49,26 +49,25 @@ export const EditCategoriesForm = ({
             router.refresh();
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            console.log(error)
+            throw error;
         } finally {
             setIsSubmitting(false); // Reset submission status to false
             toggleModal()
         }
-        console.log(values)
     };
 
     const onSubmit = async (values: z.infer<typeof categoriesSchema>) => {
         try {
-            const response = editCategories(values);
-            toast.promise(response, {
-                loading: "Processing",
-                error: "An error occured, please try again later.",
-                success: "Course Categories Updated!"
-            });
+            const response = toast.promise(
+                editCategories(values),
+                {
+                    loading: "Processing",
+                    error: "An error occured, please try again later.",
+                    success: "Course Categories Updated!"
+                }
+            );
+            return response
         } catch (error) {
             console.log(error)
         }

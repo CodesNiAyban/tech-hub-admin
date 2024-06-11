@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import { auth } from "@clerk/nextjs/server";
+import { checkRole } from "@/lib/role";
 import { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { redirect } from "next/navigation";
@@ -14,12 +14,6 @@ const MarketingLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const { userId } = auth();
-
-    if (userId) {
-        redirect("/")
-    }
-
     return (
         <ThemeProvider
             attribute="class"

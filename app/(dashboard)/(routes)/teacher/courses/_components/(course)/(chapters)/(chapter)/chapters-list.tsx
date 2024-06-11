@@ -61,6 +61,19 @@ export const ChaptersList = ({
         return null;
     }
 
+    const getSubscriptionBadge = (subscription: string | null) => {
+        switch (subscription) {
+            case "null":
+                return <Badge variant="free">Free</Badge>;
+            case "BASIC":
+                return <Badge variant="basic">Basic</Badge>;
+            case "PRO":
+                return <Badge variant="pro">Pro</Badge>;
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="mt-3">
             <DragDropContext onDragEnd={onDragEnd}>
@@ -96,11 +109,7 @@ export const ChaptersList = ({
                                             </div>
                                             {chapter.title}
                                             <div className="ml-auto pr-2 flex items-center gap-x-2">
-                                                {chapter.isFree && (
-                                                    <Badge variant="default">
-                                                        Free
-                                                    </Badge>
-                                                )}
+                                                {getSubscriptionBadge(chapter.subscription)}
                                                 <Badge
                                                     variant={chapter.isPublished ? "success" : "muted"}
                                                 >
