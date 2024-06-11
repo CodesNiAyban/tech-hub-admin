@@ -1,15 +1,22 @@
 import db from "@/lib/db";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataTable } from "../../_components/data-table";
 import { columns } from "../../_components/user-columns";
 import { getProgress } from "@/app/actions/get-progress";
+import { Course, Purchase } from "@prisma/client";
 
-const CourseUsers = async ({
-    params
-}: {
-    params: { courseId: string }
-}) => {
+interface ExtendedPurchase extends Purchase {
+    user: User;
+    chapterProgress: { chapterTitle: string; completed: boolean }[];
+    completedCourse: boolean;
+    currentChapter: string;
+    progressCount: number;
+    engagementType: string;
+    course: Course;
+}
+
+const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
     const { userId } = auth();
 
     if (!userId) {
@@ -26,9 +33,7 @@ const CourseUsers = async ({
                 chapters: {
                     where: { isPublished: true },
                     include: {
-                        userProgress: {
-                            where: { userId },
-                        }
+                        userProgress: true
                     },
                     orderBy: { position: "asc" }
                 }
@@ -51,34 +56,67 @@ const CourseUsers = async ({
         }
 
         const selectedCourse = course.title;
-        const users = await clerkClient.users.getUserList();
-        const parsedUsers = JSON.parse(JSON.stringify(users.data));
+        const usersResponse = await clerkClient.users.getUserList();
+        const users = JSON.parse(JSON.stringify(usersResponse.data));
 
-        const data = await Promise.all(course.purchases.map(async purchase => {
-            const user = parsedUsers.find((user: { id: string }) => user.id === purchase.userId);
-            const chapterProgress = course.chapters.map(chapter => {
-                const progress = chapter.userProgress[0];
+
+        const data: ExtendedPurchase[] = await Promise.all(
+            users.map(async (user: User) => {
+                const userPurchase = course.purchases.find(p => p.userId === user.id);
+                const hasPurchase = !!userPurchase;
+
+
+                const chapterProgress = course.chapters.map(chapter => {
+                    const progress = chapter.userProgress.find(up => up.userId === user.id);
+                    return {
+                        chapterTitle: chapter.title,
+                        completed: progress ? progress.isCompleted : false
+                    };
+                });
+
+                const completedCourse = chapterProgress.every(ch => ch.completed);
+                const progressCount = await getProgress(user.id, course.id);
+                const hasProgress = course.chapters.some(chapter => chapter.userProgress.length > 0);
+                const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
+
+                // Determine engagement type
+                let engagementType = "";
+
+                if (!hasPurchase && hasProgress && userSubscription) {
+                    engagementType = `${userSubscription.subscription} Subscription Only`;
+                } else if (hasPurchase && (!userSubscription || userSubscription.subscription === "null")) {
+                    engagementType = "Purchase Only";
+                } else if (!hasPurchase && userSubscription && userSubscription.subscription !== "null") {
+                    engagementType = `Subscription Only`;
+                } else if (hasPurchase && userSubscription && userSubscription.subscription === "LIFETIME") {
+                    engagementType = `${userSubscription.subscription} + Purchase`;
+                }
+
+                if (!engagementType) return null
+
                 return {
-                    chapterTitle: chapter.title,
-                    completed: progress ? progress.isCompleted : false
+                    ...userPurchase,
+                    course,
+                    user,
+                    chapterProgress,
+                    completedCourse,
+                    chapters: course.chapters.map(chapter => ({
+                        ...chapter,
+                        userProgressCount: chapter.userProgress.length,
+                    })),
+                    currentChapter: chapterProgress.find(ch => !ch.completed)?.chapterTitle || "Completed",
+                    progressCount,
+                    engagementType
                 };
-            });
-            const completedCourse = chapterProgress.every(ch => ch.completed);
-            const progressCount = await getProgress(purchase.userId, course.id); // Get progress count for each user
-            return {
-                ...purchase,
-                user,
-                chapterProgress,
-                completedCourse,
-                currentChapter: chapterProgress.find(ch => !ch.completed)?.chapterTitle || "Completed",
-                progressCount // Add progressCount to the data
-            };
-        }));
+            })
+        );
+
+        const filteredData = data.filter((row): row is ExtendedPurchase => row !== null);
 
         return (
             <div className="items-center m-4 mt-16">
                 <h1 className="text-lg font-semibold md:text-2xl">{selectedCourse} Users</h1>
-                <DataTable columns={columns} data={data} />
+                <DataTable columns={columns} data={filteredData} />
             </div>
         );
     } catch (error) {

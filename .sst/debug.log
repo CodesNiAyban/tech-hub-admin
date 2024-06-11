@@ -1,0 +1,13 @@
+2024-06-10T21:02:45.140Z    +84ms [debug] Config loaded {"version":"2.43.0","cdkVersion":"2.142.1","constructsVersion":"10.3.0","config":{"name":"tech-hub-admin","region":"us-east-1","cdk":{"qualifier":"trj2111-sc"},"stage":"ivana","ssmPrefix":"/sst/tech-hub-admin/ivana/"},"metafile":{"inputs":{"sst.config.ts":{"bytes":272,"imports":[{"path":"sst","kind":"import-statement","external":true},{"path":"sst/constructs","kind":"import-statement","external":true}],"format":"esm"}},"outputs":{".sst.config.1718053365069.mjs":{"imports":[],"exports":["default"],"entryPoint":"sst.config.ts","inputs":{"sst.config.ts":{"bytesInOutput":183}},"bytes":365}}},"paths":{"config":"C:\\Users\\ivana\\OneDrive\\Documents\\GitHub\\tech-hub-admin\\sst.config.ts","root":"C:\\Users\\ivana\\OneDrive\\Documents\\GitHub\\tech-hub-admin","out":"C:\\Users\\ivana\\OneDrive\\Documents\\GitHub\\tech-hub-admin\\.sst","artifacts":"C:\\Users\\ivana\\OneDrive\\Documents\\GitHub\\tech-hub-admin\\.sst\\artifacts"}}
+2024-06-10T21:02:45.952Z   +812ms [debug] Using AWS profile 
+2024-06-10T21:02:45.955Z     +3ms [debug] Created AWS client STSClient
+2024-06-10T21:02:45.956Z     +1ms [debug] Fetching app metadata
+2024-06-10T21:02:45.957Z     +1ms [debug] Initializing bootstrap context
+2024-06-10T21:02:45.957Z     +0ms [debug] Created AWS client CloudFormationClient
+2024-06-10T21:02:46.998Z  +1041ms [debug] Using identity Account: 654654452204 User: AIDAZQ3DSGHWLYXRQKYSV
+2024-06-10T21:02:47.028Z    +30ms [debug] Loaded bootstrap status
+2024-06-10T21:02:47.028Z     +0ms [debug] Bootstrap context initialized {"status":"ready","version":"7.3","bucket":"sstbootstrap-useast124d14e4b-btoajizmrbrz"}
+2024-06-10T21:02:47.816Z   +788ms [debug] Fetching app metadata: not found
+2024-06-10T21:02:48.748Z   +932ms [debug] Synthesizing stacks...
+2024-06-10T21:02:48.760Z    +12ms [debug] Generating types in C:\Users\ivana\OneDrive\Documents\GitHub\tech-hub-admin\.sst\types
+2024-06-10T21:02:48.895Z   +135ms [debug] Running "npx --yes open-next@3.0.2 build" script
