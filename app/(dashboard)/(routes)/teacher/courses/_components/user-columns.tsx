@@ -3,7 +3,7 @@ import { CourseProgress } from "@/components/course-progress";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { User } from "@clerk/nextjs/server";
-import { Purchase } from "@prisma/client";
+import { Course, Purchase } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
@@ -16,6 +16,7 @@ interface ExtendedPurchase extends Purchase {
     currentChapter: string;
     progressCount: number;
     engagementType: string;
+    course: Course;
 }
 
 export const columns: ColumnDef<ExtendedPurchase>[] = [
@@ -147,25 +148,20 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const { user, courseId } = row.original;
-            const userId = user.id;
-
-            return (
-                <DropdownMenu>
-                    <Button variant="ghost" className="h-4 w-8 p-0" asChild>
-                        <DropdownMenuTrigger>
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </DropdownMenuTrigger>
-                    </Button>
-                    <DropdownMenuContent align="end">
-                        <div className="flex flex-col">
-                            <UserActions courseId={courseId} userId={userId} />
-                        </div>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
+        cell: ({ row }) => (
+            <DropdownMenu>
+                <Button variant="ghost" className="h-4 w-8 p-0" asChild>
+                    <DropdownMenuTrigger>
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                </Button>
+                <DropdownMenuContent align="end">
+                    <div className="flex flex-col">
+                        <UserActions courseId={row.original.course.id} userId={row.original.user.id} />
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        ),
     },
 ];

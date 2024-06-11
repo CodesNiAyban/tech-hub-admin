@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { DataTable } from "../../_components/data-table";
 import { columns } from "../../_components/user-columns";
 import { getProgress } from "@/app/actions/get-progress";
-import { Purchase } from "@prisma/client";
+import { Course, Purchase } from "@prisma/client";
 
 interface ExtendedPurchase extends Purchase {
     user: User;
@@ -13,6 +13,7 @@ interface ExtendedPurchase extends Purchase {
     currentChapter: string;
     progressCount: number;
     engagementType: string;
+    course: Course;
 }
 
 const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
