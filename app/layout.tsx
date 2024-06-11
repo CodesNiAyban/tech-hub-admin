@@ -1,12 +1,10 @@
 import { siteConfig } from "@/config/site";
+import { dark } from "@clerk/themes";
 import "@uploadthing/react/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { checkRole } from "@/lib/role";
-import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
