@@ -58,28 +58,29 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
         const selectedCourse = course.title;
         const usersResponse = await clerkClient.users.getUserList();
         const users = JSON.parse(JSON.stringify(usersResponse.data));
-        
 
-        const data: (ExtendedPurchase | null)[] = await Promise.all(
-            course.chapters.flatMap(chapter => chapter.userProgress).map(async userProgress => {
-                const user = users.find((u: User) => u.id === userProgress.userId);
-                if (!user) return null;
+
+        const data: ExtendedPurchase[] = await Promise.all(
+            users.map(async (user: User) => {
+                const userPurchase = course.purchases.find(p => p.userId === user.id);
+                const hasPurchase = !!userPurchase;
+
 
                 const chapterProgress = course.chapters.map(chapter => {
-                    const progress = chapter.userProgress.find(up => up.userId === userProgress.userId);
+                    const progress = chapter.userProgress.find(up => up.userId === user.id);
                     return {
                         chapterTitle: chapter.title,
+                        chapter.
                         completed: progress ? progress.isCompleted : false
                     };
                 });
+
                 const completedCourse = chapterProgress.every(ch => ch.completed);
-                const progressCount = await getProgress(userProgress.userId, course.id);
-                const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: userProgress.userId } });
+                const progressCount = await getProgress(user.id, course.id);
+                const hasProgress = course.chapters.some(chapter => chapter.userProgress.length > 0);
+                const userSubscription = await db.stripeCustomer.findUnique({ where: { userId: user.id } });
 
                 // Determine engagement type
-                const purchase = course.purchases.find(p => p.userId === userProgress.userId);
-                const hasPurchase = !!purchase;
-                const hasProgress = course.chapters.some(chapter => chapter.userProgress.length > 0);
                 let engagementType = "";
 
                 if (!hasPurchase && hasProgress && userSubscription) {
@@ -88,12 +89,14 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                     engagementType = "Purchase Only";
                 } else if (!hasPurchase && userSubscription && userSubscription.subscription !== "null") {
                     engagementType = `Subscription Only`;
-                } else if (hasPurchase && userSubscription && userSubscription.subscription === "LIFETIME") {
+                } else if (hasPurchase && userSubscription && userSubscription.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase`;
                 }
 
+                if (!engagementType) return null
+
                 return {
-                    ...purchase!,
+                    ...userPurchase,
                     course,
                     user,
                     chapterProgress,

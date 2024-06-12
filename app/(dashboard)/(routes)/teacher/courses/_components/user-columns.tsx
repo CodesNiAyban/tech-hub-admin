@@ -102,21 +102,6 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
         }
     },
     {
-        accessorKey: "completedCourse",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Completed Course
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => {
-            return <span>{row.original.completedCourse ? "Yes" : "No"}</span>;
-        }
-    },
-    {
         accessorKey: "progressCount",
         header: ({ column }) => (
             <Button
