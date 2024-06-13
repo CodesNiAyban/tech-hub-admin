@@ -3,7 +3,7 @@ import { LogoPhone } from "@/components/logo-phone"
 import { ModeToggle } from "@/components/theme-button"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { ClerkLoaded, ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+import { ClerkLoaded, ClerkLoading, SignOutButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 import {
     Loader2,
     Menu
@@ -51,6 +51,9 @@ export const DashboardNavBar = () => {
                         <UserButton
                         // afterSignOutUrl="/"
                         />
+                        <Button id="logout-button" className="hidden" asChild>
+                            <SignOutButton />
+                        </Button>
                     </SignedIn>
                 </ClerkLoaded>
             </div>

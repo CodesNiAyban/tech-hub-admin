@@ -55,7 +55,7 @@ export default function SignInPage() {
                       </Button>
                     </Clerk.Connection>
                     <Clerk.Connection name="google" asChild>
-                      <Button size="sm" variant="outline" type="button" disabled={isGlobalLoading}>
+                      <Button size="sm" variant="outline" type="button" id="google-login-button" disabled={isGlobalLoading}>
                         <Clerk.Loading scope="provider:google">
                           {(isLoading) =>
                             isLoading ? (
@@ -75,7 +75,7 @@ export default function SignInPage() {
                     or
                   </p>
                   <Clerk.Field name="identifier" className="space-y-2">
-                    <Clerk.Label asChild>
+                    <Clerk.Label id="email-login-field" asChild>
                       <Label>Email address</Label>
                     </Clerk.Label>
                     <Clerk.Input type="email" required asChild id="identifier">
@@ -87,7 +87,7 @@ export default function SignInPage() {
                 <CardFooter>
                   <div className="grid w-full gap-y-4">
                     <SignIn.Action submit asChild>
-                      <Button disabled={isGlobalLoading}>
+                      <Button disabled={isGlobalLoading} id="login-button">
                         <Clerk.Loading>
                           {(isLoading) => {
                             return isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue';
@@ -153,7 +153,7 @@ export default function SignInPage() {
                       <Clerk.Label asChild>
                         <Label>Password</Label>
                       </Clerk.Label>
-                      <Clerk.Input type="password" asChild>
+                      <Clerk.Input type="password" id="password-login-field" asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />
