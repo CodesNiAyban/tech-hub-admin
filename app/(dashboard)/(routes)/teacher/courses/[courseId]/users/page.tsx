@@ -70,7 +70,6 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                     const progress = chapter.userProgress.find(up => up.userId === user.id);
                     return {
                         chapterTitle: chapter.title,
-                        chapter.
                         completed: progress ? progress.isCompleted : false
                     };
                 });
@@ -94,6 +93,7 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
                 }
 
                 if (!engagementType) return null
+                if (engagementType === "Subscription Only" && !hasProgress) return null
 
                 return {
                     ...userPurchase,

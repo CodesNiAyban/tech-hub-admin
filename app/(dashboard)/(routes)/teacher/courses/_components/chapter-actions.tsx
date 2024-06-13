@@ -68,7 +68,6 @@ export const ChapterActions = ({
                     success: "Chapter published"
                 });
             }
-            confetti.onOpen();
             return response;
         } catch (error) {
             console.log(error)
