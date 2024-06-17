@@ -35,7 +35,7 @@
     "@tanstack/react-table": "^8.17.0",
     "@uidotdev/usehooks": "^2.4.1",
     "@uploadthing/mime-types": "^0.2.10",
-    "@uploadthing/react": "^6.5.3",
+    "@uploadthing/react": "^6.6.0",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -59,7 +59,7 @@
     "svix": "^1.24.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "uploadthing": "^6.10.4",
+    "uploadthing": "^6.12.0",
     "vaul": "^0.9.1",
     "zod": "^3.23.6",
     "zustand": "^4.5.2"
