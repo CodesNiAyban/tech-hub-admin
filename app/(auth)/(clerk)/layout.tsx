@@ -14,12 +14,6 @@ const MarketingLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const { userId } = auth();
-
-    if (userId) {
-        redirect("/")
-    }
-
     return (
         <ThemeProvider
             attribute="class"
