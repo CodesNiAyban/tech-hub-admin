@@ -21,8 +21,10 @@ export const EditCourseAttachment = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Course Attachments
+                <div className="font-medium flex items-center">
+                    {initialData.attachments.length > 0 ? (<>Course Attachments</>) :
+                        (<>Course Attachments <a className="text-destructive text-xs flex ml-1">(Optional)</a></>)
+                    }
                     <EditAttachmentDialog
                         title={"Add an Attachment"}
                         formLabel={"New Course Attachment"}

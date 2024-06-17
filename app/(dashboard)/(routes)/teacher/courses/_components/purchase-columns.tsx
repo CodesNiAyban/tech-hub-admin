@@ -87,40 +87,6 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
         }
     },
     {
-        accessorKey: "currentChapter",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Current Chapter
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => {
-            return <span>{row.original.currentChapter}</span>;
-        }
-    },
-    {
-        accessorKey: "progressCount",
-        header: ({ column }) => (
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                Progress
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-        ),
-        cell: ({ row }) => {
-            if (row.original.progressCount)
-                return <CourseProgress variant="success" value={row.original.progressCount} />;
-            else
-                return <CourseProgress variant="success" value={0} />;
-        }
-
-    },
-    {
         accessorKey: "engagementType",
         header: ({ column }) => (
             <Button

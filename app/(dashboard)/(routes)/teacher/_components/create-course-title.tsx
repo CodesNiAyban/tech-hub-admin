@@ -1,4 +1,4 @@
-
+import { createSchema } from "@/app/(dashboard)/(routes)/teacher/courses/_components/_utils/form-validation"
 import { AlertDialogCancel } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
@@ -16,7 +16,6 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import * as z from "zod"
-import { createSchema } from "../courses/_components/_utils/form-validation"
 
 export const CreateCourse = () => {
     const router = useRouter();

@@ -57,7 +57,7 @@ export const EditChapterDialog = ({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant="ghost" className="font-medium">
+					<Button variant="ghost" className="font-medium ml-auto">
 						<PlusCircle className="h-5 w-5 mr-2" />
 						{title}
 					</Button>

@@ -16,7 +16,7 @@ export const CourseCode = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
+                <div className="font-medium flex items-center">
                     Course Code
                     <EditTitleDialog
                         title={"Edit Title"}
@@ -28,7 +28,7 @@ export const CourseCode = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-medium flex items-center">
                         <p className={cn("text-sm",
                             !initialData.code && "font-medium text-sm text-muted-foreground italic"
                         )}>

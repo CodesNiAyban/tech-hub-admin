@@ -62,8 +62,10 @@ export const CourseChapter = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Course Chapters
+                <div className="font-medium flex items-center">
+                    {initialData.chapters.some(chapter => chapter.isPublished) ? (<>Course Chapters</>) :
+                        (<>Course Chapters <a className="text-destructive text-xs flex ml-1">(Must publish atleast one chapter)</a></>)
+                    }
                     <EditChapterDialog
                         title={"Add a Chapter"}
                         formLabel={"New Course Chapter"}

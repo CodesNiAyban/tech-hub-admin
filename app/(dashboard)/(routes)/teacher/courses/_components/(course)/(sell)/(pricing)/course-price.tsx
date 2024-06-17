@@ -17,8 +17,10 @@ export const EditCoursePrice = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Course Price
+                <div className="font-medium flex items-center">
+                    {initialData.price && initialData.price >= 0 ? (<>Course Price</>) :
+                        (<>Course Price <a className="text-destructive text-xs flex ml-1">(Optional)</a></>)
+                    }
                     <EditPriceDialog
                         title={initialData.price ? "Edit Price" : "Set Price"}
                         formLabel={"New Course Price"}
@@ -29,13 +31,13 @@ export const EditCoursePrice = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-medium flex items-center">
                         <p className={cn("text-sm",
                             !initialData.price && "font-medium text-sm text-muted-foreground italic"
                         )}>
                             {initialData.price
                                 ? formatPrice(initialData.price)
-                                : "Set the Price"}
+                                : "free"}
                         </p>
                     </div>
                 </div>

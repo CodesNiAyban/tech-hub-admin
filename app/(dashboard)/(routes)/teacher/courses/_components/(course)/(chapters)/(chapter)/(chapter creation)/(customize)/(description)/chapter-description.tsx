@@ -19,8 +19,10 @@ export const ChapterDescription = ({
     return (
         <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Chapter Description
+                <div className="font-medium flex items-center">
+                    {initialData.description ? (<>Chapter Description</>) :
+                        (<>Chapter Description <a className="text-destructive flex ml-1">*</a></>)
+                    }
                     <EditChapterDescriptionDialog
                         title={initialData.description ? "Edit Description" : "Add Description"}
                         formLabel={"New Chapter Description"}
@@ -32,7 +34,7 @@ export const ChapterDescription = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-medium flex items-center">
                         <div className={cn("text-sm ",
                             !initialData.description && "font-medium text-sm text-muted-foreground italic"
                         )}>

@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { formatPrice } from "@/lib/format";
 import { Course } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil, Users } from "lucide-react";
+import { ArrowUpDown, BadgeDollarSign, MoreHorizontal, Pencil, Users } from "lucide-react";
 import Link from "next/link";
 import { CourseTableActions } from "./course-table-actions";
 import { User } from "@clerk/nextjs/server";
@@ -131,6 +131,12 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
                 <DropdownMenuItem>
                   <Users className="h-4 w-4 mr-2 ml-1" />
                   Users
+                </DropdownMenuItem>
+              </Link>
+              <Link href={`/teacher/courses/${id}/purchasers`}>
+                <DropdownMenuItem>
+                  <BadgeDollarSign className="h-4 w-4 mr-2 ml-1" />
+                  Purchasers
                 </DropdownMenuItem>
               </Link>
               <CourseTableActions

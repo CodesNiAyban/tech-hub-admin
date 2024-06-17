@@ -15,7 +15,7 @@ export const CourseTitle = ({
     return (
         <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
+                <div className="font-medium flex items-center">
                     Course Title
                     <EditTitleDialog
                         title={"Edit Title"}

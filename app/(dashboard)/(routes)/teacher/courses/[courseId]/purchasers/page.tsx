@@ -2,9 +2,9 @@ import db from "@/lib/db";
 import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataTable } from "../../../_components/data-table";
-import { columns } from "../../../_components/user-columns";
 import { Course, Purchase } from "@prisma/client";
 import { getProgress } from "@/actions/get-progress";
+import { columns } from "../../_components/purchase-columns";
 
 interface ExtendedPurchase extends Purchase {
     user: User;
@@ -81,14 +81,9 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
 
                 // Determine engagement type
                 let engagementType = "";
-
-                if (!hasPurchase && hasProgress && userSubscription) {
-                    engagementType = `${userSubscription.subscription} Subscription Only`;
-                } else if (hasPurchase && hasProgress && (!userSubscription || userSubscription.subscription === "null")) {
+                if (hasPurchase && (!userSubscription || userSubscription.subscription === "null")) {
                     engagementType = "Purchase Only";
-                } else if (!hasPurchase && hasProgress && userSubscription && userSubscription.subscription !== "null") {
-                    engagementType = `Subscription Only`;
-                } else if (hasPurchase && hasProgress && userSubscription && userSubscription.subscription) {
+                } else if (hasPurchase && userSubscription && userSubscription.subscription) {
                     engagementType = `${userSubscription.subscription} + Purchase`;
                 }
 
@@ -116,7 +111,7 @@ const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
 
         return (
             <div className="items-center m-4 mt-16">
-                <h1 className="text-lg font-semibold md:text-2xl">{selectedCourse} Users/Students</h1>
+                <h1 className="text-lg font-semibold md:text-2xl">{selectedCourse} Course Purchasers</h1>
                 <DataTable columns={columns} data={filteredData} />
             </div>
         );

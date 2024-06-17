@@ -20,8 +20,10 @@ export const ChapterVideo = ({
     return (
         <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Chapter Video
+                <div className="font-medium flex items-center">
+                    {initialData.videoUrl ? (<>Chapter Video</>) :
+                        (<>Chapter Video <a className="text-destructive flex ml-1">*</a></>)
+                    }
                     <EditVideoDialog
                         title={initialData.videoUrl ? "Replace Video" : "Add Video"}
                         formLabel={"Video"}
@@ -40,7 +42,7 @@ export const ChapterVideo = ({
                     <div className="relative aspect-video mt-2">
                         <MuxPlayer
                             playbackId={initialData?.muxData?.playbackId || ""}
-                            
+
                         />
                     </div>
                 )}

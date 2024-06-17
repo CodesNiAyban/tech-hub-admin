@@ -78,10 +78,9 @@ export const ChapterActions = ({
 
     const deleteChapter = async () => {
         try {
-            const response = await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
+            await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`)
             router.refresh();
             router.push(`/teacher/courses/${courseId}`)
-            return response;
         } catch (error) {
            console.error(error)
            throw error
@@ -94,8 +93,9 @@ export const ChapterActions = ({
             const response = toast.promise(deleteChapter(), {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Chapter deleted"
+                success: `Chapter deleted`
             });
+            router.refresh();
             return response;
         } catch (error) {
             console.log(error)

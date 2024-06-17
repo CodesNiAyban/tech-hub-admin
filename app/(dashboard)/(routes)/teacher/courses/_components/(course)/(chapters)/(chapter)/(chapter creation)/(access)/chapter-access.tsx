@@ -20,7 +20,7 @@ export const ChapterAccess = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
+                <div className="font-medium flex items-center">
                     Chapter Access
                     <EditChapterAccessDialog
                         title={"Set Access"}
@@ -33,7 +33,7 @@ export const ChapterAccess = ({
                     />
                 </div>
                 <div className="border bg-muted/40 rounded-md p-2 px-3">
-                    <div className="font-medium flex items-center justify-between">
+                    <div className="font-medium flex items-center">
                         <p className={cn("text-sm",
                             !initialData.subscription && "font-medium text-sm text-muted-foreground italic",
                             initialData.subscription !== null && "font-medium text-sm text-muted-foreground italic"

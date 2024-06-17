@@ -57,7 +57,7 @@ export const EditPriceDialog = ({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant="ghost" className="font-medium">
+					<Button variant="ghost" className="font-medium ml-auto">
 						{!initialData.price ? (
 							<>
 								<PlusCircle className="h-5 w-5 mr-2" />

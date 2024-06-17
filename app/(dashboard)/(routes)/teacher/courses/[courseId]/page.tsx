@@ -9,6 +9,8 @@ import { CourseAttachment } from "../_components/(course)/(attachments)/course-a
 import { Banner } from "@/components/banner";
 import { CourseActions } from "../../_components/course-actions";
 
+export const maxDuration = 60;
+
 const CourseIdPage = async ({
     params
 }: {
@@ -59,7 +61,6 @@ const CourseIdPage = async ({
         course.code,
         course.description,
         course.imageUrl,
-        course.price,
         course.categories.length > 0,
         course.chapters.some(chapter => chapter.isPublished),
     ]

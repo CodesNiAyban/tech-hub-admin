@@ -21,8 +21,10 @@ export const CourseCategories = ({
     return (
         <div className="grid gap-6 pt-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
-                    Course Categories
+                <div className="font-medium flex items-center">
+                    {initialData.categories.length > 0 ? (<>Course Categories</>) :
+                        (<>Course Categories <a className="text-destructive flex ml-1">*</a></>)
+                    }
                     <EditCategoriesDialog
                         title={initialData.categories.length > 0 ? "Edit Categories" : "Add Categories"}
                         formLabel={"New Course Categories"}

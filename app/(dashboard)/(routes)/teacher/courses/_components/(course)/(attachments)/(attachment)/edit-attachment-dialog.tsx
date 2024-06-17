@@ -58,7 +58,7 @@ export const EditAttachmentDialog = ({
 		return (
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>
-					<Button variant="ghost" className="font-medium">
+					<Button variant="ghost" className="font-medium ml-auto">
 						<PlusCircle className="h-5 w-5 mr-2" />
 						{title}
 					</Button>
@@ -84,7 +84,7 @@ export const EditAttachmentDialog = ({
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
-				<Button variant="ghost" className="font-medium">
+				<Button variant="ghost" className="font-medium ml-auto">
 					{title}
 				</Button>
 			</DrawerTrigger>

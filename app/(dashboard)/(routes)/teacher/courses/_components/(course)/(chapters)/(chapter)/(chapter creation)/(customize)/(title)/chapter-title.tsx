@@ -17,7 +17,7 @@ export const ChapterTitle = ({
     return (
         <div className="grid gap-6">
             <div className="grid gap-3">
-                <div className="font-medium flex items-center justify-between">
+                <div className="font-medium flex items-center">
                     Chapter Title
                     <EditChapterTitleDialog
                         title={"Edit Title"}

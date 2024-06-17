@@ -113,12 +113,8 @@ export const columns: ColumnDef<ExtendedPurchase>[] = [
             </Button>
         ),
         cell: ({ row }) => {
-            if (row.original.progressCount)
-                return <CourseProgress variant="success" value={row.original.progressCount} />;
-            else
-                return <CourseProgress variant="success" value={0} />;
+            return <CourseProgress variant="success" value={row.original.progressCount} />;
         }
-
     },
     {
         accessorKey: "engagementType",
