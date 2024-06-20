@@ -92,6 +92,24 @@ export const columns: ColumnDef<User>[] = [
         }
     },
     {
+        accessorKey: "publicMetadata.role",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Role
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+        cell: ({ row }) => {
+            const role = row.original.publicMetadata.role
+            return <span>{role ? role as string : "TODO:user/teacher?"}</span>;
+        },
+    },
+    {
         accessorKey: "updatedAt",
         header: ({ column }) => {
             return (
