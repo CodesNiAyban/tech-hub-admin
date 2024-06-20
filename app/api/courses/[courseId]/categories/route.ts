@@ -7,19 +7,18 @@ export async function PATCH(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
-        const { courseId } = params;
+        const { sessionClaims } = auth();
         const values = await req.json();
+        const { courseId } = params;
 
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
+        if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unathorized", { status: 401 });
         }
 
         // Check if the course exists and the user is the owner
         const courseOwner = await db.course.findUnique({
             where: {
-                id: params.courseId,
-                userId: userId,
+                id: courseId,
             }
         });
 
@@ -30,7 +29,6 @@ export async function PATCH(
         const updatedCourse = await db.course.update({
             where: {
                 id: courseId,
-                userId
             },
             data: {
                 categories: {

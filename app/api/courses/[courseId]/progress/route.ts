@@ -12,12 +12,11 @@ export async function DELETE(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
-        const { unenrolledUserId } = await req.json(); // Assuming 'others' contains the progress data to keep
+        const { sessionClaims } = auth();
+        const { unenrolledUserId } = await req.json();
+        const courseId = params.courseId;
 
-        const courseId = params.courseId; // Ensure courseId is properly extracted
-
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 

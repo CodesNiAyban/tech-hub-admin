@@ -10,22 +10,11 @@ export async function POST(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
         const { url } = await req.json();
 
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
-        const courseOwner = await db.course.findUnique({
-            where: {
-                id: params.courseId,
-                userId: userId
-            }
-        });
-
-        if (!courseOwner) {
-            return new NextResponse("Unauthorized", { status: 401 });
+        if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unathorized", { status: 401 });
         }
 
         const attachment = await db.attachment.create({

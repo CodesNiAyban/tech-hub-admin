@@ -10,16 +10,14 @@ import { columns } from "./_components/course-columns";
 export const maxDuration = 60;
 
 const Courses = async () => {
-  const { userId } = auth();
+  const { sessionClaims } = auth();
 
-  if (!userId) {
-    return redirect("/")
+  // If the user does not have the admin role, redirect them to the home page
+  if (sessionClaims?.metadata.role !== "admin") {
+    redirect("/sign-in");
   }
 
   const courses = await db.course.findMany({
-    where: {
-      userId,
-    },
     orderBy: {
       createdAt: "desc",
     },
@@ -50,15 +48,6 @@ const Courses = async () => {
     },
   });
 
-  const subscription = await db.stripeCustomer.findUnique({
-    where: {
-      userId,
-    },
-  });
-
-  if (!subscription || subscription.subscription === "null" || subscription.subscription === "BASIC") {
-    return redirect("/")
-  }
   let users = [];
   try {
     const userResponse = await clerkClient.users.getUserList();

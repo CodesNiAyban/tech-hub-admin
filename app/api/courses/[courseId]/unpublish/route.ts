@@ -7,16 +7,16 @@ export async function PATCH(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
 
-        if (!userId) {
+        // If the user does not have the admin role, redirect them to the home page
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 })
         }
 
         const course = await db.course.findUnique({
             where: {
                 id: params.courseId,
-                userId,
             },
         });
 
@@ -27,7 +27,6 @@ export async function PATCH(
         const unpublishedCourse = await db.course.update({
             where: {
                 id: params.courseId,
-                userId,
             },
             data: {
                 isPublished: false,

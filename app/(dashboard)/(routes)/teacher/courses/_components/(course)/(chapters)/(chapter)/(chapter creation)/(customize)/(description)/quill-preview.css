@@ -1,0 +1,18 @@
+.ql-container {
+    font-size: 16px !important;
+  }
+  
+  body .ql-editor {
+    height: 300px !important; /* Fixed height */
+    width: 350px !important; /* Fixed width */
+    overflow: auto !important; /* Enable scrolling */
+  }
+  
+  .ql-toolbar.ql-snow {
+    border: none !important;
+  }
+  
+  .ql-container.ql-snow {
+    border: none !important;
+  }
+  

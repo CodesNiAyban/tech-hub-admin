@@ -16,16 +16,16 @@ const CourseIdPage = async ({
 }: {
     params: { courseId: string }
 }) => {
-    const { userId } = auth();
+    const { sessionClaims } = auth();
 
-    if (!userId) {
-        return redirect("/")
+    // If the user does not have the admin role, redirect them to the home page
+    if (sessionClaims?.metadata.role !== "admin") {
+        redirect("/sign-in");
     }
 
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,
-            userId
         },
         include: {
             chapters: {

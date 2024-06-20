@@ -3,8 +3,8 @@ import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataTable } from "../../../_components/data-table";
 import { Course, Purchase } from "@prisma/client";
-import { getProgress } from "@/actions/get-progress";
 import { columns } from "../../_components/purchase-columns";
+import { getProgress } from "@/app/actions/get-progress";
 
 interface ExtendedPurchase extends Purchase {
     user: User;
@@ -17,11 +17,12 @@ interface ExtendedPurchase extends Purchase {
 }
 
 const CourseUsers = async ({ params }: { params: { courseId: string } }) => {
-    const { userId } = auth();
+    const { sessionClaims } = auth();
 
-    if (!userId) {
-        return redirect("/sign-in");
-    } // TODO: Change to admin check
+    // If the user does not have the admin role, redirect them to the home page
+    if (sessionClaims?.metadata.role !== "admin") {
+        redirect("/sign-in");
+    }
 
     try {
         const course = await db.course.findUnique({

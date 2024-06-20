@@ -6,8 +6,12 @@ export async function POST(
     req: Request,
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims, userId } = auth();
         const { title } = await req.json();
+
+        if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unathorized", { status: 401 })
+        }
 
         if (!userId) {
             return new NextResponse("Unathorized", { status: 401 })

@@ -21,16 +21,15 @@ export async function DELETE(
     }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
         const courseOwner = await db.course.findUnique({
             where: {
                 id: params.courseId,
-                userId: userId,
             }
         });
 
@@ -104,22 +103,10 @@ export async function PATCH(
     { params }: { params: { courseId: string; chapterId: string } }
 ) {
     try {
-        const { userId } = auth();
-        const { courseId } = params;
+        const { sessionClaims } = auth();
         const { isPublished, ...values } = await req.json();
 
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
-        const courseOwner = await db.course.findUnique({
-            where: {
-                id: courseId,
-                userId: userId,
-            },
-        });
-
-        if (!courseOwner) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 

@@ -1,41 +1,36 @@
 import { z } from "zod";
 
+const notOnlyWhitespace = (message: string) =>
+  z.string().regex(/^\S.*\S$/i, {
+    message: message,
+  });
+
 export const titleSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
-  }).max(100, {
+  title: notOnlyWhitespace("Title is required and cannot be whitespace only").max(100, {
     message: "Title cannot exceed 100 characters",
   }),
 });
 
 export const createSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
-  }).max(100, {
+  title: notOnlyWhitespace("Title is required and cannot be whitespace only").max(100, {
     message: "Title cannot exceed 100 characters",
   }),
 });
 
 export const codeSchema = z.object({
-  code: z.string().min(1, {
-    message: "Title is required",
-  }).max(100, {
-    message: "Title cannot exceed 100 characters",
+  code: notOnlyWhitespace("Code is required and cannot be whitespace only").max(100, {
+    message: "Code cannot exceed 100 characters",
   }),
 });
 
 export const descriptionSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
-  }).max(7000, {
+  description: notOnlyWhitespace("Description is required and cannot be whitespace only").max(7000, {
     message: "Description cannot exceed 7000 characters",
   }),
 });
 
 export const imageSchema = z.object({
-  imageUrl: z.string().min(1, {
-    message: "Image is required",
-  }),
+  imageUrl: notOnlyWhitespace("Image URL is required and cannot be whitespace only"),
 });
 
 export const categoriesSchema = z.object({
@@ -56,21 +51,19 @@ export const priceSchema = z.object({
 });
 
 export const attachmentSchema = z.object({
-  url: z.string().min(1, {
-    message: "Attachment is required",
-  }),
+  url: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
 });
 
 export const chapterSchema = z.object({
-  title: z.string().min(1).max(100, {
+  title: notOnlyWhitespace("Chapter title is required and cannot be whitespace only").max(100, {
     message: "Chapter title cannot exceed 100 characters",
   }),
 });
 
 export const accessSchema = z.object({
-  subscription: z.string().min(1),
+  subscription: notOnlyWhitespace("Subscription type is required and cannot be whitespace only"),
 });
 
 export const videoSchema = z.object({
-  videoUrl: z.string().min(1),
+  videoUrl: notOnlyWhitespace("Video URL is required and cannot be whitespace only"),
 });

@@ -13,9 +13,9 @@ export async function PATCH(
     }
 ) {
     try {
-        const { userId } = auth();
+         const { sessionClaims } = auth();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 });
         }
 

@@ -3,7 +3,7 @@ import db from "@/lib/db";
 export const getProgress = async (
     userId: string,
     courseId: string,
-): Promise<number> => {
+): Promise<number | null> => {
     try {
         const publishedChapters = await db.chapter.findMany({
             where: {
@@ -26,6 +26,21 @@ export const getProgress = async (
                 isCompleted: true,
             },
         });
+
+        if (validCompletedChapters === 0) {
+            const findUserProgress = await db.userProgress.count({
+                where: {
+                    userId: userId,
+                    chapterId: {
+                        in: publishedChapterIds,
+                    },
+                }
+            });
+            
+            if (!findUserProgress) {
+                return null
+            }
+        }
 
         const progressPercentage = (validCompletedChapters / publishedChapterIds.length) * 100;
 

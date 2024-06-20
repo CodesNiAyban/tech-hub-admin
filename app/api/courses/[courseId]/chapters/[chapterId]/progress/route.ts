@@ -8,11 +8,17 @@ export async function PUT(
     { params }: { params: { chapterId: string; courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims, userId } = auth();
         const { isCompleted } = await req.json();
+
+        if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
+
         const userProgress = await db.userProgress.upsert({
             where: {
                 userId_chapterId: {

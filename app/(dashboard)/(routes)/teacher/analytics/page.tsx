@@ -1,9 +1,10 @@
-import { getAnalytics } from "@/actions/get-analytics";
+
 import { checkRole } from "@/lib/role";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Chart } from "./_components/chart";
 import { DataCard } from "./_components/data-card";
+import { getAnalytics } from "@/app/actions/get-analytics";
 
 export const maxDuration = 60;
 
@@ -13,17 +14,13 @@ type AnalyticsPageParams = {
 };
 
 const AnalyticsPage = async (params: AnalyticsPageParams) => {
-  if (!checkRole("admin")) {
-    redirect("/");
+  const { sessionClaims } = auth();
+
+  // If the user does not have the admin role, redirect them to the home page
+  if (sessionClaims?.metadata.role !== "admin") {
+    redirect("/sign-in");
   }
-
-  const { userId } = auth();
-
-  if (!userId) {
-    return redirect("/");
-  }
-
-  const { data, totalRevenue, totalSales } = await getAnalytics(userId);
+  const { data, totalRevenue, totalSales } = await getAnalytics();
 
   return (
     <div className="p-6 mt-10">

@@ -13,6 +13,7 @@ export const getChapter = async ({
     chapterId,
 }: GetChapterProps) => {
     try {
+        // Check if the user has purchased the course
         const purchase = await db.purchase.findUnique({
             where: {
                 userId_courseId: {
@@ -22,16 +23,22 @@ export const getChapter = async ({
             },
         });
 
+        // Fetch the course details
         const course = await db.course.findUnique({
             where: {
-                isPublished: true,
                 id: courseId,
+                isPublished: true,
             },
             select: {
                 price: true,
             },
         });
 
+        if (!course) {
+            throw new Error("Course not found or not published");
+        }
+
+        // Fetch the chapter details
         const chapter = await db.chapter.findUnique({
             where: {
                 id: chapterId,
@@ -39,15 +46,16 @@ export const getChapter = async ({
             },
         });
 
-        if (!chapter || !course) {
-            throw new Error("Chapter or course not found");
+        if (!chapter) {
+            throw new Error("Chapter not found or not published");
         }
 
         let muxData = null;
         let attachments: Attachment[] = [];
         let nextChapter: Chapter | null = null;
 
-        if (purchase) {
+        // Fetch attachments if the user has purchased the course
+        if (chapter.subscription || purchase) { //TODO: cHECK IF SUBSCRIPTION MATCHES THE SUBSCRIPTION COURSE
             attachments = await db.attachment.findMany({
                 where: {
                     courseId: courseId,
@@ -55,7 +63,8 @@ export const getChapter = async ({
             });
         }
 
-        if (chapter.isFree || purchase) {
+        // Fetch Mux data and the next chapter if the chapter requires subscription or the user has purchased the course
+        if (chapter.subscription || purchase) {
             muxData = await db.muxData.findUnique({
                 where: {
                     chapterId: chapterId,
@@ -67,7 +76,7 @@ export const getChapter = async ({
                     courseId: courseId,
                     isPublished: true,
                     position: {
-                        gt: chapter?.position,
+                        gt: chapter.position,
                     },
                 },
                 orderBy: {
@@ -76,6 +85,7 @@ export const getChapter = async ({
             });
         }
 
+        // Fetch the user's progress for the current chapter
         const userProgress = await db.userProgress.findUnique({
             where: {
                 userId_chapterId: {
@@ -85,6 +95,7 @@ export const getChapter = async ({
             },
         });
 
+        // Return the gathered data
         return {
             chapter,
             course,

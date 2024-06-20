@@ -58,29 +58,25 @@ export async function POST(req: Request) {
     const eventType = evt.type;
 
     switch (eventType) {
-        // case "user.created": {
-        //     const count = await db.stripeCustomer.count({
-        //         where: {
-        //             userId: id!,
-        //         },
-        //     });
+        case "user.created": {
+            const count = await db.stripeCustomer.count({
+                where: {
+                    userId: id!,
+                },
+            });
 
-        //     if (count === 0) {
-        //         await db.stripeCustomer.create({
-        //             data: {
-        //                 userId: id!,
-        //             },
-        //         });
-
-        //         const customer = await stripe.customers.create({
-        //             email: ,
-        //         });
-        //     }
-        //     break;
-        // }
+            if (count === 0) {
+                await db.stripeCustomer.create({
+                    data: {
+                        userId: id!,
+                    },
+                });
+            }
+            break;
+        }
         case "user.deleted": {
             // Delete all data related to this userId
-            await deleteUserData(id || "");
+            await deleteUserData(id!);
             break;
         }
         default:
@@ -94,25 +90,6 @@ export async function POST(req: Request) {
 async function deleteUserData(userId: string) {
     try {
         // Delete related data from Prisma models
-        await db.course.deleteMany({
-            where: {
-                userId,
-            },
-        });
-
-        await db.userProgress.deleteMany({
-            where: {
-                userId,
-            },
-        });
-
-        // Delete StripeCustomer
-        await db.stripeCustomer.delete({
-            where: {
-                userId,
-            },
-        });
-
         // Delete Mux videos associated with the user's chapters
         const userCourses = await db.course.findMany({
             where: {
@@ -134,6 +111,20 @@ async function deleteUserData(userId: string) {
                 }
             }
         }
+
+        await db.course.deleteMany({
+            where: {
+                userId,
+            },
+        });
+
+        // Delete StripeCustomer
+        await db.stripeCustomer.delete({
+            where: {
+                userId,
+            },
+        });
+
 
         // Add deletion logic for other related data models as needed
 

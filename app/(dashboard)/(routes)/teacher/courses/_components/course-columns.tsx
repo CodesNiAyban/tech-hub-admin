@@ -13,7 +13,7 @@ import { User } from "@clerk/nextjs/server";
 
 interface ExtendedCourse extends Course {
   categories: { name: string }[];
-  chapters: { isPublished: boolean; position: number; userProgressCount: number }[];
+  chapters: { isPublished: boolean; position: number; userProgress: { userId: string }[] }[];
   user: User;
   purchases: { id: string; userId: string; createdAt: Date }[];
 }
@@ -38,7 +38,7 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
     ),
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price") || "0");
-      return <div>{formatPrice(price)}</div>;
+      return <div>{formatPrice(price) === formatPrice(0.00) ? "Free" : formatPrice(price)}</div>;
     },
   },
   {
@@ -90,8 +90,8 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
     ),
     cell: ({ row }) => {
       const chapters = row.original.chapters;
-      const totalUserProgress = chapters.reduce((acc, chapter) => acc + chapter.userProgressCount, 0);
-      return <div>{totalUserProgress} Users</div>;
+      const uniqueUserIds = new Set(chapters.flatMap(chapter => chapter.userProgress.map(progress => progress.userId)));
+      return <div>{uniqueUserIds.size} Users</div>;
     },
   },
   {

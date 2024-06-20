@@ -7,10 +7,10 @@ export async function POST(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
         const { title } = await req.json();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 })
         }
 
@@ -18,7 +18,6 @@ export async function POST(
         const courseOwner = await db.course.findUnique({
             where: {
                 id: params.courseId,
-                userId: userId,
             }
         });
 

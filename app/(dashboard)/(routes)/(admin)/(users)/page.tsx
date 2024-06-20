@@ -6,10 +6,11 @@ import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, Breadcr
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Courses = async () => {
-	const { userId } = auth();
+	const { sessionClaims } = auth();
 
-	if (!userId) {
-		return redirect("/")
+	// If the user does not have the admin role, redirect them to the home page
+	if (sessionClaims?.metadata.role !== "admin") {
+		redirect("/sign-in");
 	}
 
 	const getUsers = await clerkClient.users.getUserList();

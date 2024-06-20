@@ -17,16 +17,16 @@ export async function DELETE(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
 
-        if (!userId) {
+
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 })
         }
 
         const course = await db.course.findUnique({
             where: {
                 id: params.courseId,
-                userId: userId,
             },
             include: {
                 chapters: {
@@ -43,7 +43,7 @@ export async function DELETE(
         }
 
         for (const chapter of course.chapters) {
-            if (!chapter.muxData?.assetId) {
+            if (chapter?.muxData?.assetId) {
                 await mux.video.assets.delete(chapter.muxData!.assetId);
             }
         }
@@ -76,11 +76,11 @@ export async function PATCH(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
         const { courseId } = params;
         const values = await req.json();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 })
         }
 
@@ -111,7 +111,6 @@ export async function PATCH(
         const currentCourse = await db.course.findUnique({
             where: {
                 id: courseId,
-                userId
             }
         });
 
@@ -128,7 +127,6 @@ export async function PATCH(
         const course = await db.course.update({
             where: {
                 id: courseId,
-                userId
             },
             data: {
                 ...values,

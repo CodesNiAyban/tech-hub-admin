@@ -3,28 +3,18 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
 
+export const utapi = new UTApi();
+
+
 export async function DELETE(
     req: Request,
     { params }: { params: { courseId: string, attachmentId: string } }
 ) {
-    const utapi = new UTApi();
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 });
-        }
-
-        const courseOwner = await db.course.findUnique({
-            where: {
-                id: params.courseId,
-                userId: userId
-            }
-        });
-
-        if (!courseOwner) {
-            return new NextResponse("Course Owner Not Found", { status: 500 });
-
         }
 
         const attachment = await db.attachment.findUnique({

@@ -7,25 +7,13 @@ export async function PUT(
     { params }: { params: { courseId: string; } }
 ) {
     try {
-        const { userId } = auth();
+        const { sessionClaims } = auth();
 
-        if (!userId) {
+        if (sessionClaims?.metadata.role !== "admin") {
             return new NextResponse("Unathorized", { status: 401 })
         }
 
         const { list } = await req.json();
-
-        const courseOwner = await db.course.findUnique({
-            where: {
-                id : params.courseId,
-                userId: userId,
-            }
-        });
-
-
-        if (!courseOwner) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
 
         for (let item of list) {
             await db.chapter.update({

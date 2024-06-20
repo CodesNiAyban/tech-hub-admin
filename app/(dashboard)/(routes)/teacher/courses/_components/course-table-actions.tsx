@@ -97,6 +97,7 @@ export const CourseTableActions = ({
         try {
             setIsLoading(true);
             const response = deleteCourse();
+            router.refresh();
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occurred, please try again later.",

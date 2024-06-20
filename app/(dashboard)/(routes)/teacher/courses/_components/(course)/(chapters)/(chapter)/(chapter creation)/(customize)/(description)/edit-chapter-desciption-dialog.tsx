@@ -19,7 +19,7 @@ import {
 	DrawerTitle,
 	DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Chapter, Course } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import { Pencil, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EditChapterDescriptionForm } from "./edit-chapter-description-form";
@@ -73,7 +73,7 @@ export const EditChapterDescriptionDialog = ({
 						)}
 					</Button>
 				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
+				<DialogContent className="min-w-[700px] min-h-[300px]">
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>
 						<DialogDescription>

@@ -2,6 +2,7 @@ import { Chapter, Course } from "@prisma/client";
 import { EditChapterDescriptionDialog } from "./edit-chapter-desciption-dialog";
 import { cn } from "@/lib/utils";
 import { Preview } from "@/components/preview";
+import './quill-preview.css'
 
 interface ChapterDescriptionProps {
     initialData: Chapter;
