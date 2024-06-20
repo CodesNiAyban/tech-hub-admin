@@ -19,7 +19,7 @@ model Course {
   id     String @id @default(uuid())
   userId String
 
-  code  String  @unique @db.Text
+  code        String  @unique @db.Text
   title       String  @unique @db.Text
   description String? @db.Text
   imageUrl    String? @db.Text
@@ -127,6 +127,21 @@ model StripeCustomer {
   updatedAt DateTime @updatedAt
 }
 
+model SubscriptionPrices {
+  id            String            @id @default(uuid())
+  name          String
+  subscription  SubscriptionType
+  price         Int
+  description   String
+  recurring     RecurringInterval
+  currency      String
+  stripePriceId String // Add this field to store Stripe price ID
+  stripeProductId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum subscriptionStatus {
   INACTIVE
   ACTIVE
@@ -138,4 +153,9 @@ enum SubscriptionType {
   BASIC
   PRO
   LIFETIME
+}
+
+enum RecurringInterval {
+  month
+  one_time
 }

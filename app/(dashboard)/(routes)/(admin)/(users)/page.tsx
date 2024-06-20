@@ -1,6 +1,6 @@
 import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { columns } from "../_components/columns";
+import { columns } from "../_components/user-columns";
 import { DataTable } from "../_components/data-table";
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
