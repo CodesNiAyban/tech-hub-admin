@@ -5,6 +5,8 @@ import { DataTable } from "../../../_components/data-table";
 import { columns } from "../../../_components/user-columns";
 import { Course, Purchase } from "@prisma/client";
 import { getProgress } from "@/app/actions/get-progress";
+
+export const maxDuration = 60;
 interface ExtendedPurchase extends Purchase {
     user: User;
     chapterProgress: { chapterTitle: string; completed: boolean }[];

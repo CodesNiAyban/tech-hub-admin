@@ -8,6 +8,8 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const maxDuration = 60;
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,

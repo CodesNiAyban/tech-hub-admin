@@ -5,6 +5,7 @@ import { DataTable } from "../_components/data-table";
 import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
+export const maxDuration = 60;
 const Courses = async () => {
 	const { sessionClaims } = auth();
 

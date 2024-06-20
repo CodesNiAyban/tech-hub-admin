@@ -9,6 +9,8 @@ import { AddVideo } from "../../../_components/(course)/(chapters)/(chapter)/(ch
 import { Banner } from "@/components/banner";
 import { ChapterActions } from "../../../_components/chapter-actions";
 
+export const maxDuration = 60;
+
 const ChapterIdPage = async ({
     params
 }: {
