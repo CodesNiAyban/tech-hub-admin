@@ -16,32 +16,32 @@ export async function PATCH(
 
     const { price } = await req.json();
 
-    const priceToDelete = await db.subscriptionPrices.findUnique({
+    const priceToArchive = await db.subscriptionPrices.findUnique({
       where: {
         id: params.pricingId,
       },
     });
 
-    if (!priceToDelete) {
+    if (!priceToArchive) {
       return new NextResponse("Initial price not found", { status: 404 });
     }
 
     // Create the new price
     let newPrice;
-    if (priceToDelete.recurring === "month") {
+    if (priceToArchive.recurring === "month") {
       newPrice = await stripe.prices.create({
-        currency: priceToDelete.currency,
+        currency: priceToArchive.currency,
         unit_amount: price * 100, // Ensure the amount is in cents
         recurring: {
           interval: "month",
         },
-        product: priceToDelete.stripeProductId,
+        product: priceToArchive.stripeProductId,
       });
     } else {
       newPrice = await stripe.prices.create({
-        currency: priceToDelete.currency,
+        currency: priceToArchive.currency,
         unit_amount: price * 100, // Ensure the amount is in cents
-        product: priceToDelete.stripeProductId,
+        product: priceToArchive.stripeProductId,
       });
     }
 
@@ -50,8 +50,9 @@ export async function PATCH(
     }
 
     // Update the product to use the new price as the default
-    const updateProduct = await stripe.products.update(priceToDelete.stripeProductId!, {
+    const updateProduct = await stripe.products.update(priceToArchive.stripeProductId, {
       default_price: newPrice.id,
+      description: priceToArchive.description
     });
 
     if (!updateProduct) {
@@ -59,7 +60,7 @@ export async function PATCH(
     }
 
     // Now disable the old price
-    const disablePrice = await stripe.prices.update(priceToDelete.stripePriceId!, {
+    const disablePrice = await stripe.prices.update(priceToArchive.stripePriceId!, {
       active: false,
     });
 

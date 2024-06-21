@@ -131,7 +131,7 @@ model SubscriptionPrices {
   id            String            @id @default(uuid())
   name          String
   subscription  SubscriptionType
-  price         Int
+  price         Float
   description   String
   recurring     RecurringInterval
   currency      String

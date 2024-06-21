@@ -53,6 +53,7 @@ export const EditPriceDialog = ({
 			throw error
 		} finally {
 			setIsSubmitting(false);
+			setOpen(false);
 		}
 	};
 
