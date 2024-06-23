@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DataTable } from "./_components/data-table";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { User, auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import { CreateCourseDialog } from "../_components/create-course";
 import { columns } from "./_components/course-columns";
+import { getProgress } from "@/app/actions/get-progress";
 
 export const maxDuration = 60;
 
@@ -27,7 +28,7 @@ const Courses = async () => {
           position: "asc",
         },
         include: {
-          userProgress: true, // Include userProgress for each chapter
+          userProgress: true,
         },
       },
       categories: {
@@ -56,17 +57,23 @@ const Courses = async () => {
     console.error("Error parsing user data:", error);
   }
 
-  const data = courses.map((course) => {
-    const user = users.find((user: { id: string }) => user.id === course.userId);
+  const data = await Promise.all(courses.map(async (course) => {
+    const courseCreator = users.find((user: { id: string }) => user.id === course.userId);
+    const usersData = await Promise.all(users.map(async (user: User) => {
+      const progressCount = await getProgress(user.id, course.id);
+      if (progressCount === null) return null;
+      return {
+        ...user,
+        user,
+      };
+    }));
+
     return {
       ...course,
-      user: user || { id: course.userId, username: "Unknown" },
-      chapters: course.chapters.map((chapter) => ({
-        ...chapter,
-        userProgressCount: chapter.userProgress.length,
-      })),
+      courseCreator,
+      userData: usersData.filter(Boolean),
     };
-  });
+  }));
 
   return (
     <>

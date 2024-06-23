@@ -14,8 +14,9 @@ import { User } from "@clerk/nextjs/server";
 interface ExtendedCourse extends Course {
   categories: { name: string }[];
   chapters: { isPublished: boolean; position: number; userProgress: { userId: string }[] }[];
-  user: User;
+  courseCreator: User;
   purchases: { id: string; userId: string; createdAt: Date }[];
+  userData: any[]
 }
 
 export const columns: ColumnDef<ExtendedCourse>[] = [
@@ -63,7 +64,7 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const user = row.original.user;
+      const user = row.original.courseCreator;
       return user ? <div>{user.username}</div> : <div>Unknown</div>;
     },
   },
@@ -89,9 +90,8 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const chapters = row.original.chapters;
-      const uniqueUserIds = new Set(chapters.flatMap(chapter => chapter.userProgress.map(progress => progress.userId)));
-      return <div>{uniqueUserIds.size} Users</div>;
+      const enrolledUser = row.original.userData;
+      return <div>{enrolledUser.length} Users</div>;
     },
   },
   {
