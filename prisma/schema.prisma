@@ -30,6 +30,7 @@ model Course {
   chapters    Chapter[]
   attachments Attachment[]
   purchases   Purchase[]
+  ratings     Rating[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -55,6 +56,21 @@ model Attachment {
   @@index([courseId])
 }
 
+model Rating {
+  id     String @id @default(uuid())
+  userId String
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  rating Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
 model Chapter {
   id           String            @id @default(uuid())
   title        String
@@ -70,11 +86,31 @@ model Chapter {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   userProgress UserProgress[]
+  comments     Comments[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+}
+
+model Comments {
+  id        String     @id @default(uuid())
+  userId    String
+  chapterId String
+  chapter   Chapter    @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  comment   String?    @db.Text
+  parentId  String?    // Reference to parent comment for replies
+  parent    Comments?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comments[] @relation("CommentReplies")
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([userId, chapterId, id])
+  @@index([chapterId])
+  @@index([parentId])
 }
 
 model MuxData {
@@ -122,20 +158,21 @@ model StripeCustomer {
 
   status       subscriptionStatus @default(INACTIVE)
   subscription SubscriptionType?  @default(null)
+  package      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model SubscriptionPrices {
-  id            String            @id @default(uuid())
-  name          String
-  subscription  SubscriptionType
-  price         Float
-  description   String
-  recurring     RecurringInterval
-  currency      String
-  stripePriceId String // Add this field to store Stripe price ID
+  id              String            @id @default(uuid())
+  name            String
+  subscription    SubscriptionType
+  price           Float?
+  description     String
+  recurring       RecurringInterval
+  currency        String
+  stripePriceId   String // Add this field to store Stripe price ID
   stripeProductId String
 
   createdAt DateTime @default(now())
@@ -145,7 +182,7 @@ model SubscriptionPrices {
 enum subscriptionStatus {
   INACTIVE
   ACTIVE
-  CANCELED
+  CANCELLED
 }
 
 enum SubscriptionType {
