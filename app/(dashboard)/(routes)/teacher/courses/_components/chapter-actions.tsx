@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+export const maxDuration = 60;
+
 interface ChapterActionsProps {
     isComplete: boolean;
     courseId: string;

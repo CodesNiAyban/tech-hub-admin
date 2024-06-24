@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+export const maxDuration = 60;
+
 interface UserActionsProps {
     courseId: string;
     userId: string;

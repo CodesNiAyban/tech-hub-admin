@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/table"
 import { CreateCourseDialog } from "../../_components/create-course"
 
+export const maxDuration = 60;
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
