@@ -4,6 +4,8 @@ import { SubscriptionPrices } from "@prisma/client";
 import { DataTable } from "../_components/data-table";
 import { pricingColumns } from "../_components/pricing-columns";
 
+export const maxDuration = 60;
+
 const PricingEditPage = async () => {
     let pricesData: SubscriptionPrices[];
 

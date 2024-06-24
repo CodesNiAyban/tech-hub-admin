@@ -9,6 +9,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { UserActions } from "./user-table-actions";
 
+export const maxDuration = 60;
+
 interface ExtendedPurchase extends Purchase {
     user: User;
     chapterProgress: { chapterTitle: string, completed: boolean }[];

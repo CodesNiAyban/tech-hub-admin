@@ -11,6 +11,8 @@ import Link from "next/link";
 import { CourseTableActions } from "./course-table-actions";
 import { User } from "@clerk/nextjs/server";
 
+export const maxDuration = 60;
+
 interface ExtendedCourse extends Course {
   categories: { name: string }[];
   chapters: { isPublished: boolean; position: number; userProgress: { userId: string }[] }[];
