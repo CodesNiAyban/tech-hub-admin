@@ -1,5 +1,6 @@
+import { Category, Course, SubscriptionType } from "@prisma/client";
+
 import db from "@/lib/db";
-import { Category, SubscriptionType } from "@prisma/client";
 import { getProgress } from "./get-progress";
 export interface CourseWithProgressWithCategory {
     code: string;
@@ -22,6 +23,8 @@ export interface CourseWithProgressWithCategory {
         userId: string;
     }[];
     progress?: number | null;
+    averageRating?: number | null;
+    totalRatings?: number | null;
 }
 
 export interface GetCoursesParams {
@@ -77,6 +80,11 @@ export const getCourses = async ({
                         id: true,
                     },
                 },
+                ratings: {
+                    select: {
+                        rating: true,
+                    },
+                }
             },
             orderBy: {
                 createdAt: "desc",
@@ -86,8 +94,12 @@ export const getCourses = async ({
         if (userId) {
             const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
                 courses.map(async course => {
-
                     const progressPercentage = await getProgress(userId, course.id);
+
+                    // Calculate average rating
+                    const totalRatings = course.ratings.length;
+                    const sumRatings = course.ratings.reduce((sum, rating) => sum + rating.rating, 0);
+                    const averageRating = totalRatings > 0 ? sumRatings / totalRatings : null;
 
                     return {
                         ...course,
@@ -96,6 +108,8 @@ export const getCourses = async ({
                             ...purchase,
                             userId: userId,
                         })),
+                        averageRating: averageRating,
+                        totalRatings: totalRatings,
                     };
                 })
             );
@@ -108,10 +122,12 @@ export const getCourses = async ({
                     ...purchase,
                     userId: "",
                 })),
+                averageRating: null,
+                totalRatings: null,
             }));
         }
     } catch (error) {
-        console.log("[GET_COURSES]: ", error);
+        console.error("[GET_COURSES]: ", error);
         return [];
     }
-}
+};

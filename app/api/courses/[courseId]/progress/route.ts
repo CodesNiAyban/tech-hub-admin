@@ -12,11 +12,16 @@ export async function DELETE(
     { params }: { params: { courseId: string } }
 ) {
     try {
-        const { sessionClaims } = auth();
-        const { unenrolledUserId } = await req.json();
-        const courseId = params.courseId;
+        const { sessionClaims, userId } = auth();
 
         if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unathorized", { status: 401 })
+        }
+        const { unenrolledUserId } = await req.json(); // Assuming 'others' contains the progress data to keep
+
+        const courseId = params.courseId; // Ensure courseId is properly extracted
+
+        if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
@@ -35,6 +40,15 @@ export async function DELETE(
                     }
                 }
             },
+        });
+
+        await db.enrollees.delete({
+            where: {
+                userId_courseId: {
+                    courseId: courseId,
+                    userId: userId,
+                }
+            }
         });
 
         return new NextResponse("UserProgress updated successfully", { status: 200 });

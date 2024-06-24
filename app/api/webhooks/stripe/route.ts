@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { stripe } from "@/lib/stripe";
+import { SubscriptionType } from "@prisma/client";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -33,6 +34,12 @@ export async function POST(req: Request) {
                                 courseId: session.metadata.courseId,
                                 userId: session.metadata.userId,
                             },
+                        });
+                        await db.enrollees.create({
+                            data: {
+                                courseId: session.metadata.courseId,
+                                userId: session.metadata.userId,
+                            }
                         });
                     } else if (session.metadata && session.metadata.type === "lifetime") {
                         await db.stripeCustomer.update({
@@ -73,29 +80,27 @@ export async function POST(req: Request) {
                 }
                 break;
             case "customer.subscription.updated":
-                subscription = event.data.object as Stripe.Subscription;
-
-                if (subscription.metadata.type === "basic") {
+                subscription = event.data.object;
+                if (subscription.cancel_at_period_end) {
+                    await db.stripeCustomer.update({
+                        where: {
+                            userId: subscription.metadata.userId,
+                        },
+                        data: {
+                            status: "CANCELLED",
+                        },
+                    })
+                } else {
                     await db.stripeCustomer.update({
                         where: {
                             userId: subscription.metadata.userId,
                         },
                         data: {
                             status: "ACTIVE",
-                            subscription: "BASIC",
                         },
-                    });
-                } else if (subscription.metadata.type === "pro") {
-                    await db.stripeCustomer.update({
-                        where: {
-                            userId: subscription.metadata.userId,
-                        },
-                        data: {
-                            status: "ACTIVE",
-                            subscription: "PRO",
-                        },
-                    });
+                    })
                 }
+
                 break;
             case "customer.subscription.deleted":
                 subscription = event.data.object as Stripe.Subscription;
@@ -107,6 +112,20 @@ export async function POST(req: Request) {
                     data: {
                         status: "INACTIVE",
                         subscription: null,
+                        package: "",
+                    },
+                });
+                break;
+            case "customer.subscription.resumed":
+                subscription = event.data.object as Stripe.Subscription;
+
+                await db.stripeCustomer.update({
+                    where: {
+                        userId: subscription.metadata.userId,
+                    },
+                    data: {
+                        status: "ACTIVE",
+                        subscription: subscription.metadata.type.toString().toUpperCase() as SubscriptionType,
                     },
                 });
                 break;

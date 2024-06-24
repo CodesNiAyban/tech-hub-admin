@@ -19,6 +19,7 @@ const Courses = async () => {
     redirect("/sign-in");
   }
 
+
   const courses = await db.course.findMany({
     orderBy: {
       createdAt: "desc",
@@ -60,7 +61,11 @@ const Courses = async () => {
 
   const data = await Promise.all(courses.map(async (course) => {
     const courseCreator = users.find((user: { id: string }) => user.id === course.userId);
-    const usersData = await getEnrolledUsers(course.id);
+    const usersData = await db.enrollees.findMany({
+      where: {
+        courseId: course.id,
+      },
+    });
 
     return {
       ...course,
