@@ -17,11 +17,6 @@ export const createSchema = z.object({
   }),
 });
 
-export const codeSchema = z.object({
-  code: notOnlyWhitespace("Code is required and cannot be whitespace only").max(100, {
-    message: "Code cannot exceed 100 characters",
-  }),
-});
 
 export const descriptionSchema = z.object({
   description: notOnlyWhitespace("Description is required and cannot be whitespace only").max(7000, {

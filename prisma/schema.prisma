@@ -19,7 +19,6 @@ model Course {
   id     String @id @default(uuid())
   userId String
 
-  code        String  @unique @db.Text
   title       String  @unique @db.Text
   description String? @db.Text
   imageUrl    String? @db.Text

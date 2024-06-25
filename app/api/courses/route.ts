@@ -22,26 +22,12 @@ export async function POST(
         if (existingCourse) {
             return NextResponse.json({ error: "Title must be unique" }, { status: 403 })
         }
-
-        const baseCode = title
-            .replace(/\s+/g, '')  // Remove spaces
-            .substring(0, 3)      // Take the first 3 characters
-            .toUpperCase();       // Convert to uppercase
-
-        let code = baseCode;
-        let counter = 0;
-
         // Check for uniqueness and increment the counter if necessary
-        while (await db.course.findUnique({ where: { code } })) {
-            counter++;
-            code = `${baseCode}${counter}`;
-        }
 
         const course = await db.course.create({
             data: {
                 userId,
                 title,
-                code
             }
         });
 

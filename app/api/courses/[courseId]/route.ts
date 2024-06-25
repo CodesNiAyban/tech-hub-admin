@@ -96,18 +96,6 @@ export async function PATCH(
             }
         }
 
-        if (values.code) {
-            const existingCourseByCode = await db.course.findUnique({
-                where: {
-                    code: values.code,
-                },
-            });
-
-            if (existingCourseByCode && existingCourseByCode.id !== courseId) {
-                return new NextResponse("Code must be unique", { status: 403 });
-            }
-        }
-
         const currentCourse = await db.course.findUnique({
             where: {
                 id: courseId,
