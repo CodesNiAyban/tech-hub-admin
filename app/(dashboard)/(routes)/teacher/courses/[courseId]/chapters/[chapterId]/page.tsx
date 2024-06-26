@@ -8,6 +8,7 @@ import { AccessSettings } from "../../../_components/(course)/(chapters)/(chapte
 import { AddVideo } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(video)/add-video";
 import { Banner } from "@/components/banner";
 import { ChapterActions } from "../../../_components/chapter-actions";
+import { ChapterModule } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(modules)/chapter-modules";
 import { AddQuiz } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(quiz)/add-quiz";
 
 export const maxDuration = 60;
@@ -104,6 +105,11 @@ const ChapterIdPage = async ({
                                 courseId={params.courseId}
                                 chapterId={params.chapterId}
                             />
+                            <AddQuiz
+                                initialData={chapter}
+                                courseId={params.courseId}
+                                chapterId={params.chapterId}
+                            />
                         </div>
                     </div>
                     <div>
@@ -117,7 +123,7 @@ const ChapterIdPage = async ({
                     </div>
                     <div>
                         <div className="flexcenter gap-x-2">
-                            <AddQuiz
+                            <ChapterModule
                                 initialData={chapter}
                                 courseId={params.courseId}
                                 chapterId={params.chapterId}

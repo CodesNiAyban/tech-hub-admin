@@ -76,6 +76,7 @@ model Chapter {
   title        String
   description  String?           @db.Text
   videoUrl     String?           @db.Text
+  pdfUrl       String?           @db.Text
   position     Int
   isPublished  Boolean           @default(false)
   subscription SubscriptionType? @default(null)

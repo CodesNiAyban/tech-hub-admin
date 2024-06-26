@@ -30,7 +30,34 @@ export const getChapter = async ({
                 isPublished: true,
             },
             select: {
+                id: true,
                 price: true,
+                chapters: {
+                    select: {
+                        id: true,
+                        position: true,
+                        subscription: true,
+                        pdfUrl: true,
+                        userProgress: {
+                            where: {
+                                userId,
+                            },
+                            select: {
+                                isCompleted: true,
+                                userId: true,
+                            },
+                        },
+                        comments: {
+                            select: {
+                                id: true,
+                                comment: true,
+                            },
+                        },
+                    },
+                    orderBy: {
+                        position: 'asc',
+                    },
+                },
             },
         });
 

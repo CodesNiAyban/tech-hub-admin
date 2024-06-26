@@ -3,6 +3,7 @@ import { Video } from "lucide-react";
 import Image from "next/image";
 import { EditVideoDialog } from "./set-video-dialog";
 import MuxPlayer from "@mux/mux-player-react"
+import { DeleteVideoDialog } from "./delete-video-dialog";
 
 interface ChapterVideoProps {
     initialData: Chapter & { muxData?: MuxData | null }
@@ -39,12 +40,14 @@ export const ChapterVideo = ({
                         <Video className="h-10 w-10 text-muted-foreground" />
                     </div>
                 ) : (
-                    <div className="relative aspect-video mt-2">
-                        <MuxPlayer
-                            playbackId={initialData?.muxData?.playbackId || ""}
-
-                        />
-                    </div>
+                    <>
+                        <DeleteVideoDialog courseId={courseId} chapterId={chapterId} />
+                        <div className="relative aspect-video mt-2">
+                            <MuxPlayer
+                                playbackId={initialData?.muxData?.playbackId || ""}
+                            />
+                        </div>
+                    </>
                 )}
             </div>
         </div >

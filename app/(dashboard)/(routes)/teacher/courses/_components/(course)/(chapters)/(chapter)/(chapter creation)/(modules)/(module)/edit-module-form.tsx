@@ -1,31 +1,34 @@
 "use client";
 
 import { FileUpload } from "@/components/file-upload";
-import { Course } from "@prisma/client";
+import { Chapter } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import * as z from "zod";
-import { attachmentSchema } from "../../../_utils/form-validation";
+import { moduleSchema } from "../../../../../../_utils/form-validation";
 
-interface EditAttachmentProps {
-    initialData: Course;
+
+interface EditModuleProps {
+    initialData: Chapter;
     courseId: string;
+    chapterId: string;
     formLabel: string;
     toggleModal: () => void;
 }
 
-export const EditAttachmentForm = ({
+export const EditModuleForm = ({
     initialData,
-    courseId,
+    chapterId,
     formLabel,
-    toggleModal
-}: EditAttachmentProps) => {
+    toggleModal,
+    courseId
+}: EditModuleProps) => {
     const router = useRouter();
 
-    const editAttachment = async (values: z.infer<typeof attachmentSchema> & { name: string }) => {
+    const editModule = async (values: z.infer<typeof moduleSchema>) => {
         try {
-            const response = await axios.post(`/api/courses/${courseId}/attachments`, values);
+            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
             router.refresh();
             return response;
         } catch (error) {
@@ -36,14 +39,14 @@ export const EditAttachmentForm = ({
         }
     };
 
-    const onSubmit = async (values: z.infer<typeof attachmentSchema>, name: string) => {
+    const onSubmit = async (values: z.infer<typeof moduleSchema>) => {
         try {
             const response = toast.promise(
-                editAttachment({ ...values, name }),
+                editModule({ ...values }),
                 {
                     loading: "Processing",
                     error: "An error occured, please try again later.",
-                    success: "Attachment Added!"
+                    success: "Module Added!"
                 }
             );
             return response;
@@ -55,15 +58,15 @@ export const EditAttachmentForm = ({
     return (
         <div>
             <FileUpload
-                endpoint="courseAttachments"
-                onChange={(url, name) => {
-                    if (url && name) {
-                        onSubmit({ url: url }, name);
+                endpoint="chapterModule"
+                onChange={(url) => {
+                    if (url) {
+                        onSubmit({ pdfUrl: url });
                     }
                 }}
             />
             <div className="text-xs text-muted-foreground mt-4">
-                Add anything your students might need to complete the course
+                Add anything your students might need to complete the Chapter
             </div>
         </div>
     );

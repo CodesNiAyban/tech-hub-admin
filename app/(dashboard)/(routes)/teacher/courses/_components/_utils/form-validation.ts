@@ -17,12 +17,18 @@ export const createSchema = z.object({
   }),
 });
 
-
 export const descriptionSchema = z.object({
   description: notOnlyWhitespace("Description is required and cannot be whitespace only").max(7000, {
     message: "Description cannot exceed 7000 characters",
   }),
 });
+
+export const commentSchema = z.object({
+  comment: notOnlyWhitespace("Description is required and cannot be whitespace only").max(1000, {
+    message: "Comments cannot exceed 1000 characters",
+  }),
+});
+
 
 export const imageSchema = z.object({
   imageUrl: notOnlyWhitespace("Image URL is required and cannot be whitespace only"),
@@ -47,6 +53,10 @@ export const priceSchema = z.object({
 
 export const attachmentSchema = z.object({
   url: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
+});
+
+export const moduleSchema = z.object({
+  pdfUrl: notOnlyWhitespace("Attachment URL is required and cannot be whitespace only"),
 });
 
 export const chapterSchema = z.object({

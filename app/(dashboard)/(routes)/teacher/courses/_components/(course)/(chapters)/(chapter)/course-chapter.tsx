@@ -31,11 +31,7 @@ export const CourseChapter = ({
                 });
             return response;
         } catch (error) {
-            if (typeof error === 'string') {
-                toast.error(error);
-            } else {
-                toast.error("An error occurred. Please try again later.");
-            }
+            throw Error
         } finally {
             setIsUpdating(false)
         }

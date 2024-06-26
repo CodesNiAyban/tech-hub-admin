@@ -17,25 +17,25 @@ import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-interface DeleteAttachmentDialogProps {
-    attachmentId: string,
+interface DeleteModuleDialogProps {
     courseId: string;
+    chapterId: string;
 }
 
-export const DeleteAttachmentDialog = ({
-    attachmentId,
-    courseId
-}: DeleteAttachmentDialogProps) => {
+export const DeleteModuleDialog = ({
+    courseId,
+    chapterId
+}: DeleteModuleDialogProps) => {
     const [deletingId, setDeletingId] = useState<string | null>(null)
     const router = useRouter();
 
     const onDelete = async (id: string) => {
         try {
-            const response = deleteAttachment(id);
+            const response = deleteModule(id);
             toast.promise(response, {
                 loading: "Processing",
                 error: "An error occured, please try again later.",
-                success: "Attachment removed"
+                success: "Module removed"
             });
         } catch (error) {
             throw Error
@@ -44,10 +44,12 @@ export const DeleteAttachmentDialog = ({
         }
     }
 
-    const deleteAttachment = async (id: string) => {
+    const deleteModule = async (id: string) => {
         try {
             setDeletingId(id);
-            const response = await axios.delete(`/api/courses/${courseId}/attachments/${id}`)
+            const response = await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {
+                pdfUrl: null
+            });
             router.refresh();
             return response;
         } catch (error) {
@@ -68,13 +70,13 @@ export const DeleteAttachmentDialog = ({
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete your
-                        attachment.
+                        module.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</AlertDialogCancel>
                     <AlertDialogAction asChild className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2">
-                        <button onClick={() => onDelete(attachmentId)}>
+                        <button onClick={() => onDelete(chapterId)}>
                             Continue
                         </button>
                     </AlertDialogAction>

@@ -7,22 +7,21 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { Chapter, MuxData } from "@prisma/client"
-import { NotebookText, Video } from "lucide-react"
+import { Chapter } from "@prisma/client"
+import { File } from "lucide-react"
 import { useState } from "react"
-import { ChapterVideo } from "./chapter-quiz"
-
-interface ChapterVideoFormProps {
-    initialData: Chapter & { muxData?: MuxData | null }
+import { EditChapterModule } from "./(module)/chapter-module"
+interface TitleFormProps {
+    initialData: Chapter;
     courseId: string;
-    chapterId: string;
+    chapterId: string ;
 }
 
-export const AddQuiz = ({
+export const ChapterModule = ({
     initialData,
     courseId,
-    chapterId
-}: ChapterVideoFormProps) => {
+    chapterId,
+}: TitleFormProps) => {
     const [modalOpen, setModalOpen] = useState(false);
     const toggleModal = () => setModalOpen((current) => !current);
 
@@ -31,18 +30,18 @@ export const AddQuiz = ({
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center center gap-x-2">
-                        <IconBadge icon={NotebookText} size={"default"} variant={"default"} />
-                        Add a Quiz
+                        <IconBadge icon={File} size={"default"} variant={"default"} />
+                        Resources and Modules
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                {/* <ChapterVideo
+                <EditChapterModule
                     initialData={initialData}
                     courseId={courseId}
-                    toggleModal={toggleModal}
                     chapterId={chapterId}
-                /> */}
+                    toggleModal={toggleModal}
+                />
             </CardContent>
         </Card>
     );
