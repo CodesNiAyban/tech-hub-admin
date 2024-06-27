@@ -19,49 +19,45 @@ const Courses = async () => {
     redirect("/sign-in");
   }
 
+  const [courses, userResponse] = await Promise.all([
+    db.course.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        chapters: {
+          orderBy: {
+            position: "asc",
+          },
+          include: {
+            userProgress: true,
+          },
+        },
+        categories: {
+          orderBy: {
+            name: "desc",
+          },
+        },
+        attachments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        purchases: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    }),
+    clerkClient.users.getUserList()
+  ]);
 
-  const courses = await db.course.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      chapters: {
-        orderBy: {
-          position: "asc",
-        },
-        include: {
-          userProgress: true,
-        },
-      },
-      categories: {
-        orderBy: {
-          name: "desc",
-        },
-      },
-      attachments: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-      purchases: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-    },
-  });
-
-  let users = [];
-  try {
-    const userResponse = await clerkClient.users.getUserList();
-    users = JSON.parse(JSON.stringify(userResponse.data));
-  } catch (error) {
-    console.error("Error parsing user data:", error);
-  }
+  const users = JSON.parse(JSON.stringify(userResponse.data));
 
   const data = await Promise.all(courses.map(async (course) => {
     const courseCreator = users.find((user: { id: string }) => user.id === course.userId);
-    const usersData = await db.enrollees.findMany({
+    const userCount= await db.enrollees.count({
       where: {
         courseId: course.id,
       },
@@ -70,7 +66,7 @@ const Courses = async () => {
     return {
       ...course,
       courseCreator,
-      userData: usersData,
+      userCount,
     };
   }));
 

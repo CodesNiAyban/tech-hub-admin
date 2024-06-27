@@ -18,7 +18,7 @@ interface ExtendedCourse extends Course {
   chapters: { isPublished: boolean; position: number; userProgress: { userId: string }[] }[];
   courseCreator: User;
   purchases: { id: string; userId: string; createdAt: Date }[];
-  userData: any[]
+  userCount: number;
 }
 
 export const columns: ColumnDef<ExtendedCourse>[] = [
@@ -92,8 +92,8 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const enrolledUser = row.original.userData;
-      return <div>{enrolledUser.length} Users</div>;
+      const enrolledUser = row.original;
+      return <div>{enrolledUser.userCount} Users</div>;
     },
   },
   {
