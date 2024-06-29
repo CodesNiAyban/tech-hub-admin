@@ -1,13 +1,9 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DataTable } from "./_components/data-table";
-import { User, auth, clerkClient } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import db from "@/lib/db";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { CreateCourseDialog } from "../_components/create-course";
 import { columns } from "./_components/course-columns";
-import { getProgress } from "@/app/actions/get-progress";
-import { getEnrolledUsers } from "@/app/actions/get-users";
+import { DataTable } from "./_components/data-table";
 
 export const maxDuration = 60;
 
