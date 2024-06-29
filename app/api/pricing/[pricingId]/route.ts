@@ -26,12 +26,15 @@ export async function PATCH(
       return new NextResponse("Initial price not found", { status: 404 });
     }
 
+    // Ensure the price is properly formatted to avoid floating-point issues
+    const formattedPrice = Math.round(price * 100); // Convert to cents and round
+
     // Create the new price
     let newPrice;
     if (priceToArchive.recurring === "month") {
       newPrice = await stripe.prices.create({
         currency: priceToArchive.currency,
-        unit_amount: price * 100, // Ensure the amount is in cents
+        unit_amount: formattedPrice,
         recurring: {
           interval: "month",
         },
@@ -40,7 +43,7 @@ export async function PATCH(
     } else {
       newPrice = await stripe.prices.create({
         currency: priceToArchive.currency,
-        unit_amount: price * 100, // Ensure the amount is in cents
+        unit_amount: formattedPrice,
         product: priceToArchive.stripeProductId,
       });
     }
@@ -52,7 +55,7 @@ export async function PATCH(
     // Update the product to use the new price as the default
     const updateProduct = await stripe.products.update(priceToArchive.stripeProductId, {
       default_price: newPrice.id,
-      description: priceToArchive.description
+      description: priceToArchive.description,
     });
 
     if (!updateProduct) {
@@ -80,7 +83,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedPrice);
   } catch (error) {
-    console.log("[COURSES]", error);
+    console.log("[STRIPE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
