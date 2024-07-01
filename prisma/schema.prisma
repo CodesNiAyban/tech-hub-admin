@@ -80,6 +80,7 @@ model Chapter {
   position     Int
   isPublished  Boolean           @default(false)
   subscription SubscriptionType? @default(null)
+  quiz         Boolean           @default(false)
 
   muxData MuxData?
 
@@ -88,11 +89,64 @@ model Chapter {
 
   userProgress UserProgress[]
   comments     Comments[]
+  quizSetting  QuizSetting[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ChapterQuiz ChapterQuiz[]
+
+  @@index([courseId])
+}
+
+model ChapterQuiz {
+  id        String            @id @default(cuid())
+  userId    String
+  chapterId String
+  chapter   Chapter           @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  questions ChapterQuestion[]
+  topic     String
+  gameType  GameType
+  level     QuestionLevel     @default(HARDCORE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([courseId])
+  @@index([chapterId])
+}
+
+model ChapterQuestion {
+  id                String   @id @default(cuid())
+  question          String
+  answer            String
+  gameId            String
+  options           Json? // for mcq questions
+  percentageCorrect Float? // for open_ended questions
+  isCorrect         Boolean? // for mcq questions
+  questionType      GameType
+  userAnswer        String?
+
+  game ChapterQuiz @relation(fields: [gameId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([gameId])
+}
+
+model QuizSetting {
+  id        String  @id @default(uuid())
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  topic    String
+  gameType GameType      @default(mcq)
+  level    QuestionLevel @default(HARDCORE)
+  amount   Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chapterId])
 }
 
 model Comments {
@@ -192,6 +246,57 @@ model SubscriptionPrices {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Game {
+  id        String        @id @default(cuid())
+  userId    String
+  questions Question[]
+  topic     String
+  gameType  GameType
+  level     QuestionLevel @default(HARDCORE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Question {
+  id                String   @id @default(cuid())
+  question          String
+  answer            String
+  gameId            String
+  options           Json? // for mcq questions
+  percentageCorrect Float? // for open_ended questions
+  isCorrect         Boolean? // for mcq questions
+  questionType      GameType
+  userAnswer        String?
+
+  game Game @relation(fields: [gameId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([gameId])
+}
+
+model topic_count {
+  id    String @id @default(cuid())
+  topic String @unique
+  count Int
+}
+
+enum GameType {
+  mcq
+  open_ended
+}
+
+enum QuestionLevel {
+  Easy
+  Medium
+  Hard
+  HARDCORE
 }
 
 enum subscriptionStatus {

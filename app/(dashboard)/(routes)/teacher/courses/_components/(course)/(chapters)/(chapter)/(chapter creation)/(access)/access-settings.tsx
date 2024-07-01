@@ -11,6 +11,7 @@ import { Eye, LayoutDashboard } from "lucide-react"
 import { useState } from "react"
 import { ChapterAccess } from "./chapter-access"
 import { Chapter } from "@prisma/client"
+import { EditChapterQuizForm } from "./(quiz)/set-chapter-quiz-form"
 
 interface AccessFormProps {
     initialData: Chapter
@@ -42,6 +43,12 @@ export const AccessSettings = ({
                     courseId={courseId}
                     toggleModal={toggleModal}
                     chapterId={chapterId}
+                />
+                <EditChapterQuizForm
+                    initialData={initialData}
+                    courseId={courseId}
+                    chapterId={chapterId}
+                    formLabel={"Chapter Quiz"}
                 />
             </CardContent>
         </Card>
