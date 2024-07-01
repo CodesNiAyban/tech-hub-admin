@@ -9,7 +9,6 @@ import { AddVideo } from "../../../_components/(course)/(chapters)/(chapter)/(ch
 import { Banner } from "@/components/banner";
 import { ChapterActions } from "../../../_components/chapter-actions";
 import { ChapterModule } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(modules)/chapter-modules";
-import { AddQuiz } from "../../../_components/(course)/(chapters)/(chapter)/(chapter creation)/(quiz)/add-quiz";
 
 export const maxDuration = 60;
 
@@ -82,7 +81,7 @@ const ChapterIdPage = async ({
                             Course Chapter Creation
                         </h1>
                         <span className="text-sm root:text-slate-700">
-                            Complete all fields {completionText}
+                            Complete Required fields to be able to publish {completionText}
                         </span>
                     </div>
                     <ChapterActions
@@ -105,11 +104,6 @@ const ChapterIdPage = async ({
                                 courseId={params.courseId}
                                 chapterId={params.chapterId}
                             />
-                            <AddQuiz
-                                initialData={chapter}
-                                courseId={params.courseId}
-                                chapterId={params.chapterId}
-                            />
                         </div>
                     </div>
                     <div>
@@ -120,8 +114,6 @@ const ChapterIdPage = async ({
                                 chapterId={params.chapterId}
                             />
                         </div>
-                    </div>
-                    <div>
                         <div className="flexcenter gap-x-2">
                             <ChapterModule
                                 initialData={chapter}
