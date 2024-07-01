@@ -43,8 +43,12 @@ export const categoriesSchema = z.object({
 
 export const priceSchema = z.object({
   price: z
-    .coerce
-    .number()
+    .union([z.string(), z.number()])
+    .refine((val) => !isNaN(Number(val)), {
+      message: "Price must be a valid number",
+      path: ["price"],
+    })
+    .transform((val) => Number(val))
     .refine((val) => val >= 0, {
       message: "Price must be non-negative",
       path: ["price"],
