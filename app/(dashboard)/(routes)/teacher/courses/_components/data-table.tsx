@@ -66,9 +66,10 @@ export function DataTable<TData, TValue>({
                         table.getColumn("title")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
+                    data-testid="input-student-{id}"
                 />
 
-                <CreateCourseDialog />
+                <CreateCourseDialog data-testid="add-course"/>
 
             </div>
             <div className="rounded-md border">

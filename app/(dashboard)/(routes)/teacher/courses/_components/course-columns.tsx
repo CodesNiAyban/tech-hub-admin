@@ -123,13 +123,13 @@ export const columns: ColumnDef<ExtendedCourse>[] = [
           </Button>
           <DropdownMenuContent align="end">
             <div className="flex flex-col">
-              <Link href={`/teacher/courses/${id}`}>
+              <Link href={`/teacher/courses/${id}`} data-testid="edit-course-{id}">
                 <DropdownMenuItem>
                   <Pencil className="h-4 w-4 mr-2 ml-1" />
                   Edit
                 </DropdownMenuItem>
               </Link>
-              <Link href={`/teacher/courses/${id}/users`}>
+              <Link href={`/teacher/courses/${id}/users`} data-testid="students-page">
                 <DropdownMenuItem>
                   <Users className="h-4 w-4 mr-2 ml-1" />
                   Users

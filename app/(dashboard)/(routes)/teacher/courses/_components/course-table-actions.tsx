@@ -121,7 +121,7 @@ export const CourseTableActions = ({
                     </>
                 )}
             </Button>
-            <ConfirmModal onConfirm={onDelete}>
+            <ConfirmModal onConfirm={onDelete} data-testid="delete-course-{id}">
                 <Button size="sm" disabled={isLoading} variant="ghost" className="flex items-left justify-start">
                     <Trash className="h-4 w-4 mr-2" />
                     Delete

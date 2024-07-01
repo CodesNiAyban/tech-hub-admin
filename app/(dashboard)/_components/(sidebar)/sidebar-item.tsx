@@ -32,6 +32,8 @@ const SideBarItem = ({
             className={cn("flex items-center gap-3 rounded-lg px-3 py-3 text-muted-foreground transition-all hover:text-primary ",
                 isActive && "flex items-center gap-3 rounded-lg bg-muted px-3 py-3 text-primary transition-all hover:text-primary",
             )}
+
+            data-testid={href === "/teacher/courses" && "courses-page"}
         >
             <Icon className="h-6 w-6" />
             {label}

@@ -51,7 +51,7 @@ export const UserActions = ({
 
     return (
         <UnenrollConfirmModal onConfirm={onDelete}>
-            <Button size="sm" disabled={isLoading} variant="ghost" className="flex items-left justify-start">
+            <Button size="sm" disabled={isLoading} variant="ghost" className="flex items-left justify-start" data-testid="unenroll-student-{id}">
                 <BadgeX className="h-4 w-4 mr-2" />
                 Unenroll
             </Button>

@@ -55,7 +55,7 @@ export default function SignInPage() {
                       </Button>
                     </Clerk.Connection>
                     <Clerk.Connection name="google" asChild>
-                      <Button size="sm" variant="outline" type="button" id="google-login-button" disabled={isGlobalLoading}>
+                      <Button size="sm" variant="outline" type="button" data-testid="email-login-field" disabled={isGlobalLoading}>
                         <Clerk.Loading scope="provider:google">
                           {(isLoading) =>
                             isLoading ? (
@@ -78,7 +78,7 @@ export default function SignInPage() {
                     <Clerk.Label id="email-login-field" asChild>
                       <Label>Email address</Label>
                     </Clerk.Label>
-                    <Clerk.Input type="email" required asChild id="identifier">
+                    <Clerk.Input type="email" required asChild data-testid="email-login-field" id="identifier">
                       <Input />
                     </Clerk.Input>
                     <Clerk.FieldError className="block text-sm text-destructive" />
@@ -153,7 +153,7 @@ export default function SignInPage() {
                       <Clerk.Label asChild>
                         <Label>Password</Label>
                       </Clerk.Label>
-                      <Clerk.Input type="password" id="password-login-field" asChild>
+                      <Clerk.Input type="password" data-testid="password-login-field" asChild>
                         <Input />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />
@@ -162,7 +162,7 @@ export default function SignInPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignIn.Action submit asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button disabled={isGlobalLoading} data-testid="login-button">
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? <Icons.spinner className="size-4 animate-spin" /> : 'Continue';

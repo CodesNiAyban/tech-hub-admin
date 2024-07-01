@@ -93,6 +93,7 @@ export const EditTitleForm = ({
                                             {...field}
                                             disabled={isSubmitting} // Disable input field while submitting
                                             placeholder="e.g Advanced Web Development"
+                                            data-test-id="course-name"
                                         />
                                     </FormControl>
                                     <FormMessage />

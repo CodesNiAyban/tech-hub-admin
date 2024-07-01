@@ -120,6 +120,7 @@ export function EditChapterQuizForm({
                         <Switch
                           checked={field.value}
                           onCheckedChange={handleSwitchChange}
+                          data-testid="quiz-creation"
                         />
                       </FormControl>
                       {field.value && (

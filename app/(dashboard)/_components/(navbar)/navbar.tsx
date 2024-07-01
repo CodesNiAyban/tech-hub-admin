@@ -51,7 +51,7 @@ export const DashboardNavBar = () => {
                         <UserButton
                         // afterSignOutUrl="/"
                         />
-                        <Button id="logout-button" className="hidden" asChild>
+                        <Button data-testid="logout-button" className="hidden" asChild>
                             <SignOutButton />
                         </Button>
                     </SignedIn>

@@ -86,6 +86,7 @@ export const EditDescriptionForm = ({
                                             disabled={isSubmitting} // Disable input field while submitting
                                             placeholder="e.g. 'This course is about..."
                                             className="resize-none"
+                                            data-testid="course-details"
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -78,6 +78,7 @@ export const CreateCourse = () => {
                                             disabled={isSubmitting}
                                             placeholder="e.g Advanced Web Development"
                                             {...field}
+                                            data-testid="course-title"
                                         />
                                     </FormControl>
                                     <FormDescription>

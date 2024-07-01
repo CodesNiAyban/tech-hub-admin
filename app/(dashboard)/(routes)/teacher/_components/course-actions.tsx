@@ -115,6 +115,7 @@ export const CourseActions = ({
                 disabled={!isComplete || isLoading}
                 variant="outline"
                 size="sm"
+                data-testid={isPublished ? "unpublish-course" : "publish-course-{id}"}
             >
                 {isPublished ? "Unpublish" : "Publish"}
             </Button>

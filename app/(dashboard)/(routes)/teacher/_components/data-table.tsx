@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
                     className="max-w-sm"
                 />
 
-                <CreateCourseDialog />
+                <CreateCourseDialog data-testid="create-course"/>
 
             </div>
             <div className="rounded-md border">
