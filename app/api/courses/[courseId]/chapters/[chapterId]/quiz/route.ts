@@ -10,9 +10,9 @@ export async function PATCH(
 ) {
     try {
         const { sessionClaims } = auth();
-        
-        if (sessionClaims && sessionClaims.role !== "admin") {
-            return new NextResponse("Unauthorized", { status: 401 });
+
+        if (sessionClaims?.metadata.role !== "admin") {
+            return new NextResponse("Unathorized", { status: 401 });
         }
 
         const chapter = await db.chapter.findUnique({
